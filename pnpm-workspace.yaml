@@ -1,4 +1,4 @@
 packages:
   - 'apps/*'
   - 'packages/*'
-  - 'websocket_server/server'
+  - 'websocket_server'
