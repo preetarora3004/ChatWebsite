@@ -2,20 +2,22 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
-  "main": "dist/index.js",
-  "types": "dist/index.d.ts",
+  "main": "./dist/index.js", 
+  "module": "./dist/index.mjs", 
+  "types": "./dist/index.d.ts",
   "files": [
     "dist"
   ],
   "exports": {
-  ".": {
-    "import": "./dist/index.js", 
-    "types": "./dist/index.d.ts"  
-  }
-},
+    ".": {
+      "types": "./dist/index.d.ts",
+      "import": "./dist/index.mjs", 
+      "require": "./dist/index.js"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": " tsc --project tsconfig.json && prisma generate ",
+    "build": "tsup index.ts --format cjs,esm --dts && prisma generate",
     "prisma:generate": "prisma generate",
     "postinstall": "prisma generate"
   },
