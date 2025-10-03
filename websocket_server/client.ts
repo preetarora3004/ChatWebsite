@@ -1,1 +1,1 @@
-export { client } from '@repo/db';
+export { client } from '@repo/db/dist/client.js';
