@@ -477,37 +477,6 @@ importers:
         specifier: 5.8.2
         version: 5.8.2
 
-  websocket_server/server:
-    dependencies:
-      '@repo/db':
-        specifier: workspace:*
-        version: link:../../packages/db
-      '@types/express':
-        specifier: ^5.0.3
-        version: 5.0.3
-      '@types/ws':
-        specifier: ^8.18.1
-        version: 8.18.1
-      dotenv:
-        specifier: ^17.2.2
-        version: 17.2.3
-      express:
-        specifier: ^5.1.0
-        version: 5.1.0
-      jsonwebtoken:
-        specifier: ^9.0.2
-        version: 9.0.2
-      ws:
-        specifier: ^8.18.3
-        version: 8.18.3
-    devDependencies:
-      '@types/jsonwebtoken':
-        specifier: ^9
-        version: 9.0.10
-      typescript:
-        specifier: ^5.9.2
-        version: 5.9.3
-
 packages:
 
   /@alloc/quick-lru@5.2.0:

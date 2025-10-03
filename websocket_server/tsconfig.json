@@ -9,11 +9,7 @@
     "isolatedModules": true,
     "strict": true,
     "allowSyntheticDefaultImports": true,
-    "outDir": "dist",
-    "paths": {
-  "@repo/db": ["../../packages/db/client.ts"]
-},
-
+    "outDir": "dist"
   },
   "include": ["src"]
 }
