@@ -1,0 +1,37 @@
+{
+  "extends": "@repo/typescript-config/nextjs.json",
+  "compilerOptions": {
+    "baseUrl": ".",
+    "plugins": [
+      {
+        "name": "next"
+      }
+    ],
+    "target": "es2020",
+    "module": "esnext",
+    "moduleResolution": "bundler",
+    "declaration": true,
+    "paths": {
+      "@repo/ui/*": [
+        "packages/ui/src/*"
+      ],
+      "@repo/ui": [
+        "packages/ui/src/index.ts"
+      ],
+      "@repo/db": [
+        "packages/db/dist/prisma/client.ts"
+      ]
+    }
+  },
+  "include": [
+    "**/*.ts",
+    "**/*.tsx",
+    "next-env.d.ts",
+    "next.config.ts",
+    ".next/types/**/*.ts",
+    "../../packages/types/next-auth.d.ts"
+  ],
+  "exclude": [
+    "node_modules"
+  ]
+}

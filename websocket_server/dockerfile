@@ -1,0 +1,13 @@
+FROM node:18-alpine
+
+WORKDIR /app/websocket_server/server
+
+COPY package.json pnpm-lock.yaml ../../pnpm-workspace.yaml ./
+RUN npm install -g pnpm
+RUN pnpm install --filter websocket_server/server...
+
+COPY . .
+RUN pnpm run build
+
+EXPOSE 8080
+CMD ["pnpm", "start"]

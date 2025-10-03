@@ -1,0 +1,17 @@
+{ 
+  "compilerOptions": {
+    "declaration": true,
+    "outDir": "dist",
+    "target": "ES2020",                       
+    "module": "esnext",                       
+    "moduleResolution": "bundler",                                  
+    "esModuleInterop": true,                  
+    "allowSyntheticDefaultImports": true,     
+    "skipLibCheck": true,                    
+    "forceConsistentCasingInFileNames": true, 
+    "isolatedModules": true,
+    "strict": true,
+  },
+  "include": ["src", "../types/**/*.d.ts", "../db/node_modules/@prisma/client/*.js"],
+  "exclude": ["dist", "build", "node_modules"],
+}

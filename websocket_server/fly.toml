@@ -1,0 +1,5 @@
+[build]
+  dockerfile = "Dockerfile"
+  build-target = "app"
+  # Important: tell Fly where the app really is
+  context = "./websocket_server/server"
