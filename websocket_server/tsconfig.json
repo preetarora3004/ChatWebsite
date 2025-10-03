@@ -10,9 +10,6 @@
     "forceConsistentCasingInFileNames": true,
     "strict": true,
     "skipLibCheck": true,
-    "paths" : {
-      "@repo/db" : ["../node_modules/@repo/db/dist/index.js"]
-    }
   },
   "include": ["src"]
 }
