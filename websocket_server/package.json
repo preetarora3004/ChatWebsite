@@ -9,7 +9,7 @@
     "dev": "ts-node --project ./tsconfig.json ./src/server.ts",
     "check-types": "tsc --noEmit",
     "build": "pnpm --filter \"@repo/db\" build && pnpm --filter \"websocket_server\" build",
-    "start": "NODE_ENV=production node dist/server.js"
+    "start": "NODE_ENV=production node ./dist/server.js"
   },
   "keywords": [],
   "author": "",
