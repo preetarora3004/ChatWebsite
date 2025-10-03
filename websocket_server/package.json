@@ -4,15 +4,11 @@
   "type": "module",
   "main": "./src/server.js",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "dev": "ts-node --project ./tsconfig.json ./src/server.ts",
     "check-types": "tsc --noEmit",
-    "build": "tsc --project tsconfig.json && cd ../packages/db pnpx run build",
+    "build": "cd ../packages/db pnpx run build && tsc --project tsconfig.json ",
     "start": "NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
