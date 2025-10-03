@@ -6,18 +6,25 @@
     "dist"
   ],
   "main": "./dist/index.cjs",
-  "module": "./index.ts",
+  "module": "./dist/index.js",
   "types": "./dist/index.d.ts",
+
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
       "import": "./index.ts",
       "require": "./dist/index.cjs"
+    },
+    "./next": {
+      "types": "./dist/next.d.ts",
+      "import": "./next.ts",
+      "require": "./dist/next.cjs"
     }
+
   },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup index.ts --format cjs,esm --dts && prisma generate",
+    "build": "tsup index.ts next.ts --format cjs,esm --dts && prisma generate",
     "prisma:generate": "prisma generate",
     "postinstall": "prisma generate"
   },
