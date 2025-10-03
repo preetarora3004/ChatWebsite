@@ -2,8 +2,16 @@
   "name": "@repo/db",
   "version": "1.0.0",
   "description": "",
-  "main": "./client.ts",
-  "types": "./client.ts",
+  "main": "dist/client.js",
+  "types": "dist/client.d.ts",
+  "exports": {
+    ".": {
+      "import": "./dist/client.js",
+      "require": "./dist/client.js",
+      "types": "./client.ts",
+      "development": "./client.ts"
+    }
+  },
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
     "build": "npx prisma generate && tsc",
