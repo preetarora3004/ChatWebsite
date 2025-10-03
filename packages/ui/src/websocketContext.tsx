@@ -23,7 +23,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const token = session?.user?.token;
     if (!token) return;
 
-    const ws = new WebSocket(`ws://localhost:8080?token=${token}`);
+    const ws = new WebSocket(`https://chatwebsite-4h13.onrender.com/?token=${token}`);
 
     ws.onopen = () => {
       console.log("WebSocket connected");
