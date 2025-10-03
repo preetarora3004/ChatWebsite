@@ -11,7 +11,7 @@
     "strict": true,
     "skipLibCheck": true,
     "paths" : {
-      "@repo/db" : ["../../packages/db/dist/index"]
+      "@repo/db" : ["../node_modules/@repo/db/dist/index.js"]
     }
   },
   "include": ["src"]
