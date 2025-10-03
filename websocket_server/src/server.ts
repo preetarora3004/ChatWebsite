@@ -1,7 +1,7 @@
 import { createServer, IncomingMessage } from 'http';
 import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
-import { client } from './client.js';
+import { client } from '@repo/db';
 import jwt from 'jsonwebtoken';
 import type { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
@@ -9,7 +9,7 @@ import dotenv from 'dotenv';
 dotenv.config();
 
 const prisma = client;
-const port = 8080;
+const port = process.env.PORT || 8080;
 const app = express();
 const server = createServer(app);
 const wss = new WebSocketServer({ noServer: true });

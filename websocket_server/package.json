@@ -13,7 +13,7 @@
     "dev": "ts-node --project ./tsconfig.json ./src/server.ts",
     "check-types": "tsc --noEmit",
     "build": "tsc --project tsconfig.json",
-    "start": "NODE_ENV=production node dist/src/server.js"
+    "start": "NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
   "author": "",
