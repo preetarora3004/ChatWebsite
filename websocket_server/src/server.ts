@@ -1,7 +1,7 @@
 import { createServer, IncomingMessage } from 'http';
 import express from 'express';
 import WebSocket, { WebSocketServer } from 'ws';
-import { client } from "../../packages/db/dist/index"
+import { client } from "@repo/db"
 import jwt from 'jsonwebtoken';
 import type { JwtPayload } from 'jsonwebtoken';
 import dotenv from 'dotenv';
