@@ -6,9 +6,8 @@
     "dist"
   ],
   "main": "./dist/index.cjs",
-  "module": "./dist/index.js",
+  "module": "./index.ts",
   "types": "./dist/index.d.ts",
-
   "exports": {
     ".": {
       "types": "./dist/index.d.ts",
@@ -28,7 +27,8 @@
   "type": "module",
   "dependencies": {
     "@prisma/client": "^6.13.0",
-    "prisma": "^6.13.0"
+    "prisma": "^6.13.0",
+    "server-only": "^0.0.1"
   },
   "devDependencies": {
     "tsup": "^8.0.0",
