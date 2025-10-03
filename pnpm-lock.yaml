@@ -479,6 +479,9 @@ importers:
 
   websocket_server:
     dependencies:
+      '@prisma/client':
+        specifier: ^6.13.0
+        version: 6.16.3(prisma@6.16.3)(typescript@5.9.3)
       '@repo/db':
         specifier: workspace:*
         version: link:../packages/db
