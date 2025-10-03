@@ -12,7 +12,6 @@ export async function POST(req : Request){
         }
     })
     
-    console.log(`Here is the ${username}, ${password}`);
 
     if(verification){
         return Response.json({

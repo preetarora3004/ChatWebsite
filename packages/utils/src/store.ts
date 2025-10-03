@@ -82,15 +82,13 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
 
   lastSeen : {id : "", time : new Date(), userId : ""},
   lastSeenFetch : async(userId) => {
-    console.log(`userId : ${userId}`);
     const res = await fetch(`https://chat-website-web-sigma.vercel.app/api/lastSeen/${userId}`,{
       method: "GET"
     })
 
     if(res.ok){
       const data = await res.json();
-      console.log("Here");
-      console.log(data);
+
       set((state) => ({
         lastSeen: data,
         activeUser: { ...state.activeUser, lastSeen: data.time },
@@ -162,9 +160,6 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
 
     if (res.ok) {
       const data: existingChat[]  = await res.json();
-
-      console.log("Inside Store")
-      console.log(data);
 
       set({ existingChats : data });
 

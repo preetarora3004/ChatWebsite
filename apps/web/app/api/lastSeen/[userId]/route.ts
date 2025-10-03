@@ -7,8 +7,6 @@ export async function GET(req : Request, {params} : {params : {userId : string}}
     const session = await getServerSession(authOption);
     const id = (await params).userId
 
-    console.log("Here", id);
-
     if(!session || !session.user) return Response.json({msg : "Not able to find"}, {status : 400});
 
     try{
@@ -18,8 +16,6 @@ export async function GET(req : Request, {params} : {params : {userId : string}}
             },
             orderBy : {id : "desc"}
         })
-
-        console.log(lastSeen);
 
         if(!lastSeen){
             return Response.json({msg : "User not present"}, {status : 411});
