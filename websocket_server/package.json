@@ -13,7 +13,7 @@
     "dev": "ts-node --project ./tsconfig.json ./src/server.ts",
     "check-types": "tsc --noEmit",
     "build": "tsc --project tsconfig.json && cd ../packages/db pnpx run build",
-    "start": "NODE_ENV=production ts-node src/server.ts"
+    "start": "NODE_ENV=production node dist/server.js"
   },
   "keywords": [],
   "author": "",
