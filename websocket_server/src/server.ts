@@ -116,7 +116,6 @@ wss.on('connection', async (socket: WebSocket, req: IncomingMessage) => {
 
         const c = clients.get(senderId);
         if (c && !c.isAlive) {
-            // only broadcast when status changes
             notifyPresence(senderId, true);
         }
         if (c) c.isAlive = true;
