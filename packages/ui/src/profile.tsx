@@ -20,7 +20,7 @@ export const Profile = ({username} : ProfileProp) =>{
             </div>
             
             <div className="flex mb-6 ml-42 text-white items-end cursor-pointer hover:text-blue-500" onClick={()=>{
-                signOut({callbackUrl :"https://chat-website-web-sigma.vercel.app/api/auth/signin"})
+                signOut({callbackUrl :"/api/auth/signin"})
             }}>
                 <svg xmlns="http//www.w3.org/2000/svg" width="22" height="22" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2" strokeLinecap="round" strokeLinejoin="round" className="hovertext-blue-500 lucide lucide-log-out-icon lucide-log-out"><path d="m16 17 5-5-5-5"/><path d="M21 12H9"/><path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4"/></svg>
             </div>

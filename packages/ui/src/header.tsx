@@ -38,10 +38,10 @@ export function Header() {
 
         <div className="flex items-center gap-3">
           <Button variant="ghost" asChild className="sm:inline-flex">
-            <Link href="https://chat-website-web-sigma.vercel.app/login">Sign In</Link>
+            <Link href="/login">Sign In</Link>
           </Button>
           <Button asChild>
-            <Link href="https://chat-website-web-sigma.vercel.app/login">Get Started</Link>
+            <Link href="/login">Get Started</Link>
           </Button>
         </div>
       </div>

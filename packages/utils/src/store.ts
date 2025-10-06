@@ -69,7 +69,7 @@ type StoreType = {
 export const useUser = createWithEqualityFn<StoreType>((set) => ({
   users: [],
   loadUsers: async () => {
-    const res = await fetch("https://chat-website-web-sigma.vercel.app/api/user", { method: "GET" });
+    const res = await fetch("/api/user", { method: "GET" });
     const data: { users: User[] } = await res.json();
 
     set((state) => {
@@ -82,7 +82,7 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
 
   lastSeen : {id : "", time : new Date(), userId : ""},
   lastSeenFetch : async(userId) => {
-    const res = await fetch(`https://chat-website-web-sigma.vercel.app/api/lastSeen/${userId}`,{
+    const res = await fetch(`/api/lastSeen/${userId}`,{
       method: "GET"
     })
 
@@ -101,7 +101,7 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
   
   chat: { id: "", name: "" },
   chatCreation: async () => {
-    const res = await fetch("https://chat-website-web-sigma.vercel.app/api/chat", {
+    const res = await fetch("/api/chat", {
       method: "POST"
     })
 
@@ -117,7 +117,7 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
 
   participant: { id: "", chatId: "", username: "" },
   participantCreation: async (chatId, username) => {
-    const res = await fetch(`https://chat-website-web-sigma.vercel.app/api/chat_participant/${chatId}`, {
+    const res = await fetch(`/api/chat_participant/${chatId}`, {
       method: "POST",
       headers: { "Content-Type": "application/json" },
       body: JSON.stringify({ username }),
@@ -151,7 +151,7 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
 
   existingChats: [],
   searchUser: async (userId: string) => {
-    const res = await fetch('https://chat-website-web-sigma.vercel.app/api/findParticipant', {
+    const res = await fetch('/api/findParticipant', {
       method: "GET",
       headers: {
         userId: userId,
@@ -171,7 +171,7 @@ export const useUser = createWithEqualityFn<StoreType>((set) => ({
   addMessage: (msg: MessageType) => set((state) => ({ message: [msg, ...state.message] })),
   fetchMessage : async (chatId : string)=>{
 
-    const res = await fetch(`https://chat-website-web-sigma.vercel.app/api/message/${chatId}`,{
+    const res = await fetch(`/api/message/${chatId}`,{
       method : "GET"
     })
 

@@ -55,7 +55,7 @@ export const authOption: NextAuthOptions = {
 
     callbacks,
     pages: {
-        signIn: "https://chat-website-web-sigma.vercel.app/login",
+        signIn: "/login",
     },
 
     secret: process.env.NEXTAUTH_SECRET
