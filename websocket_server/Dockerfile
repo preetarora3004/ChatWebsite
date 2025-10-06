@@ -1,3 +1,5 @@
+# Filename: websocket_server/Dockerfile
+
 # ---- Base Stage ----
 # Start with a slim, secure Node.js image
 FROM node:18-slim AS base

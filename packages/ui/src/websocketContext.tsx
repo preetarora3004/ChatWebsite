@@ -23,7 +23,7 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
     const token = session?.user?.token;
     if (!token) return;
 
-    const ws = new WebSocket(`https://chat-app-restless-silence-2413.fly.dev/?token=${token}`);
+    const ws = new WebSocket(`https://chat-app-sparkling-pond-3900.fly.dev/?token=${token}`);
 
     ws.onopen = () => {
       console.log("WebSocket connected");
