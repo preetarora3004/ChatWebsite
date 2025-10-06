@@ -363,8 +363,7 @@ export default function ChatMergedUI() {
           <header className="h-16 bg-[color:var(--background)] border-b border-[color:var(--border)] px-4 flex items-center">
             <button
               onClick={() => {
-                setActiveUser("", "")
-                setChatId("")
+                router.push('/main')
               }}
               className="mr-3 text-[color:var(--muted-foreground)] hover:text-[color:var(--accent)] md:hidden"
             >
