@@ -11,9 +11,8 @@ import LoadingPage from "./loading"
 function generateUUID(): string {
   const cryptoObj = globalThis.crypto as Crypto | undefined
   if (cryptoObj) {
-    const maybeRandomUUID = (cryptoObj as unknown as { randomUUID?: () => string }).randomUUID
-    if (typeof maybeRandomUUID === "function") {
-      return maybeRandomUUID()
+    if (typeof cryptoObj.randomUUID === "function") {
+      return cryptoObj.randomUUID();
     }
     if (typeof cryptoObj.getRandomValues === "function") {
 
