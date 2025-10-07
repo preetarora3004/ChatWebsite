@@ -11,7 +11,6 @@ A modern, full-stack **chat application** built with a Turborepo monorepo using 
 * 🛠️ Shared `ui` component library across apps
 * ⚡ TypeScript-first codebase for type safety
 * 🎨 Tailwind CSS for utility-first styling
-* 🧹 ESLint + Prettier for consistent code style
 
 ---
 
