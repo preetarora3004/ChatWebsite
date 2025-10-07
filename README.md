@@ -36,7 +36,7 @@ A modern, full-stack **chat application** built with a Turborepo monorepo using 
 
 ## 🧰 Prerequisites
 
-* Node.js (v16 or newer recommended)
+* Node.js (v20 or newer recommended)
 * Pnpm
 
 ---
