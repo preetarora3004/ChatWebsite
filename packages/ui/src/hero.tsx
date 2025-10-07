@@ -25,7 +25,7 @@ export function Hero() {
 
           <div className="flex flex-col sm:flex-row items-center justify-center gap-4">
             <Button size="lg" asChild className="text-base px-8">
-              <Link href="/signup">
+              <Link href="/login">
                 Start Chatting Free
                 <ArrowRight className="ml-2 h-5 w-5" />
               </Link>
