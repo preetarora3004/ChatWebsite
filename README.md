@@ -59,7 +59,7 @@ pnpm install
 3. **Run the app**
 
 ```bash
-pnpm run dev dev
+pnpm run dev
 ```
 
 Open your browser at `http://localhost:3000` (or follow the terminal output).
