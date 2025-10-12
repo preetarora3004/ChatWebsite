@@ -1,5 +1,3 @@
-
-
 import { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { prismaAdapter } from './prismaAdaptor';
