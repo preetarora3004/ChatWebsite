@@ -6,7 +6,7 @@ A modern, full-stack **chat application** built with a Turborepo monorepo using 
 
 ## 🌟 Key Features
 
-* 🔁 Real-time chat experience (1:1 and group-ready)
+* 🔁 Real-time chat experience (1:1)
 * 🧩 Monorepo architecture (Turborepo) for scalable development
 * 🛠️ Shared `ui` component library across apps
 * ⚡ TypeScript-first codebase for type safety
