@@ -72,8 +72,6 @@ Open your browser at `http://localhost:3000` (or follow the terminal output).
 * `pnpm run build` — build all apps
 * `pnpm run start` — run production server
 
-*(Adjust scripts as needed in root/package.json)*
-
 ---
 
 ## 🔧 Configuration
@@ -83,10 +81,8 @@ Create a `.env.local` in the `apps/web` folder (or at repo root depending on set
 ```
 NEXT_PUBLIC_API_URL=https://api.example.com
 SOCKET_URL=ws://localhost:8080
-# Add other secrets or keys as required
+DATABASE_URL = ""
 ```
-
-> ⚠️ Never commit secrets to the repository.
 
 ---
 
