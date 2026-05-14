@@ -6,7 +6,8 @@ import { useRouter } from "next/navigation";
 import { signUp } from '@repo/utils'
 import Loading from './loading'
 
-import { User, Lock, Mail, Facebook, Twitter, Linkedin } from "lucide-react"
+import { User, Lock, Mail } from "lucide-react"
+import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa"
 
 export default function AuthPage() {
   const [isSignUpMode, setIsSignUpMode] = useState(false)
@@ -108,10 +109,10 @@ export default function AuthPage() {
             <p className="social-text">Or Sign in with social platforms</p>
             <div className="social-media">
               <a href="#" className="social-icon">
-                <Facebook size={20} />
+                <FaFacebook size={20} />
               </a>
               <a href="#" className="social-icon">
-                <Twitter size={20} />
+                <FaTwitter size={20} />
               </a>
               <a href="#" className="social-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -122,7 +123,7 @@ export default function AuthPage() {
                 </svg>
               </a>
               <a href="#" className="social-icon">
-                <Linkedin size={20} />
+                <FaLinkedin size={20} />
               </a>
             </div>
           </form>
@@ -154,10 +155,10 @@ export default function AuthPage() {
             <p className="social-text">Or Sign up with social platforms</p>
             <div className="social-media">
               <a href="#" className="social-icon">
-                <Facebook size={20} />
+                <FaFacebook size={20} />
               </a>
               <a href="#" className="social-icon">
-                <Twitter size={20} />
+                <FaTwitter size={20} />
               </a>
               <a href="#" className="social-icon">
                 <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
@@ -168,7 +169,7 @@ export default function AuthPage() {
                 </svg>
               </a>
               <a href="#" className="social-icon">
-                <Linkedin size={20} />
+                <FaLinkedin size={20} />
               </a>
             </div>
           </form>
