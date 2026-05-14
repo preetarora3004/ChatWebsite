@@ -5,7 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react"
 import { useRouter } from "next/navigation"
 import { useUser, type MessageType } from "@repo/utils"
 import { shallow } from "zustand/shallow"
-import { useSocket } from "@repo/ui/websocketContext"
+import { useSocket } from "@repo/ui/src/websocketContext"
 import LoadingPage from "./loading"
 
 function generateUUID(): string {
@@ -261,7 +261,6 @@ export default function ChatMergedUI() {
     <div className="w-screen h-screen fixed inset-0 flex justify-center items-center bg-background text-foreground">
       <div className="w-screen h-screen overflow-hidden flex flex-col md:flex-row">
   
-        {/* Sidebar */}
         <aside
           className={`h-full md:w-1/4 w-full py-2 border-r border-[color:var(--border)] bg-[color:var(--background)] 
             ${activeUser && chatId?.id ? "hidden md:block" : "block"}`}
@@ -353,12 +352,10 @@ export default function ChatMergedUI() {
           </div>
         </aside>
   
-        {/* Chat Section */}
         <main
           className={`h-full flex-1 bg-[url('/background2.png')] bg-cover bg-center flex flex-col 
             ${activeUser && chatId?.id ? "block" : "hidden md:flex"}`}
         >
-          {/* Mobile Back Button */}
           <header className="h-16 bg-[color:var(--background)] border-b border-[color:var(--border)] px-4 flex items-center">
             <button
               onClick={() => {
@@ -393,7 +390,6 @@ export default function ChatMergedUI() {
             </div>
           </header>
   
-          {/* Messages */}
           <div
             className="flex-1 flex px-3 py-2 pt-10 h-[80vh]"
             style={
@@ -432,7 +428,6 @@ export default function ChatMergedUI() {
             </div>
           </div>
   
-          {/* Input */}
           <div className="w-full flex justify-center px-3 pb-[max(5rem,env(safe-area-inset-bottom))] mb-5">
             <div
               className="w-full max-w-3xl rounded-xl border mb-8 border-[color:var(--border)] bg-[color:var(--background)] shadow-sm flex items-center gap-2 px-2"

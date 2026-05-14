@@ -1,5 +1,5 @@
-import { MessageSkeletonGroup } from "@repo/ui/message-list-skeleton"
-import { ChatListSkeleton } from "@repo/ui/chatList-skeleton"
+import { MessageSkeletonGroup } from "@repo/ui/src/message-list-skeleton"
+import { ChatListSkeleton } from "@repo/ui/src/chatList-skeleton"
 
 export default function Page() {
   return (

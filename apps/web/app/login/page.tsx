@@ -127,7 +127,6 @@ export default function AuthPage() {
             </div>
           </form>
 
-          {/* Sign Up Form */}
           <form onSubmit={signup}className="sign-up-form">
             <h2 className="title">Sign up</h2>
             <div className="input-field">
@@ -196,24 +195,20 @@ export default function AuthPage() {
                 <rect x="75" y="125" width="80" height="3" rx="1.5" fill="#9CA3AF" />
                 <rect x="75" y="135" width="60" height="3" rx="1.5" fill="#9CA3AF" />
 
-                {/* Secondary chat bubble */}
                 <rect x="20" y="40" width="100" height="60" rx="15" fill="#000000" />
                 <rect x="30" y="55" width="60" height="3" rx="1.5" fill="#FFFFFF" />
                 <rect x="30" y="65" width="45" height="3" rx="1.5" fill="#FFFFFF" />
                 <rect x="30" y="75" width="70" height="3" rx="1.5" fill="#FFFFFF" />
 
-                {/* Mobile phone */}
                 <rect x="140" y="120" width="50" height="90" rx="10" fill="#1F2937" />
                 <rect x="145" y="130" width="40" height="60" rx="5" fill="#111827" />
                 <circle cx="165" cy="200" r="6" fill="#374151" />
 
-                {/* Chat notifications */}
                 <circle cx="175" cy="135" r="8" fill="#EF4444" />
                 <text x="175" y="140" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
                   3
                 </text>
 
-                {/* People connecting */}
                 <g transform="translate(30, 170)">
                   <circle cx="0" cy="0" r="12" fill="#F59E0B" />
                   <rect x="-8" y="12" width="16" height="20" rx="8" fill="#1F2937" />
@@ -229,11 +224,9 @@ export default function AuthPage() {
                   <rect x="-8" y="12" width="16" height="20" rx="8" fill="#1F2937" />
                 </g>
 
-                {/* Connection lines */}
                 <path d="M42 180 Q61 175 68 180" stroke="#10B981" strokeWidth="2" fill="none" />
                 <path d="M92 180 Q111 175 118 180" stroke="#10B981" strokeWidth="2" fill="none" />
 
-                {/* Message reactions/emojis */}
                 <circle cx="200" cy="60" r="15" fill="#FEF3C7" />
                 <text x="200" y="67" textAnchor="middle" fill="white" fontSize="16">
                   😊
@@ -249,7 +242,6 @@ export default function AuthPage() {
                   ❤️
                 </text>
 
-                {/* WiFi/connection symbol */}
                 <g transform="translate(10, 10)">
                   <path d="M0 20 Q10 10 20 20" stroke="#10B981" strokeWidth="2" fill="none" />
                   <path d="M5 20 Q10 15 15 20" stroke="#10B981" strokeWidth="2" fill="none" />
@@ -271,20 +263,16 @@ export default function AuthPage() {
           <div className="image">
             <svg width="400" height="400" viewBox="0 0 300 300" fill="none">
               <g transform="translate(50, 50) scale(1)">
-                {/* Group chat bubble */}
                 <rect x="60" y="60" width="140" height="100" rx="25" fill="#F3F4F6" stroke="#E5E7EB" strokeWidth="2" />
 
-                {/* Multiple user avatars in group */}
                 <circle cx="90" cy="90" r="15" fill="#F59E0B" />
                 <circle cx="130" cy="90" r="15" fill="#EF4444" />
                 <circle cx="170" cy="90" r="15" fill="#8B5CF6" />
 
-                {/* Group message lines */}
                 <rect x="80" y="115" width="60" height="3" rx="1.5" fill="#9CA3AF" />
                 <rect x="80" y="125" width="80" height="3" rx="1.5" fill="#9CA3AF" />
                 <rect x="80" y="135" width="45" height="3" rx="1.5" fill="#9CA3AF" />
 
-                {/* Welcome message */}
                 <rect x="20" y="20" width="120" height="50" rx="15" fill="#000000" />
                 <text x="80" y="35" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
                   Welcome!
@@ -293,7 +281,6 @@ export default function AuthPage() {
                   Join the conversation
                 </text>
 
-                {/* Community icons */}
                 <g transform="translate(30, 180)">
                   <circle cx="0" cy="0" r="20" fill="#10B981" />
                   <text x="0" y="6" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">
@@ -301,12 +288,10 @@ export default function AuthPage() {
                   </text>
                 </g>
 
-                {/* Online status indicators */}
                 <circle cx="102" cy="78" r="4" fill="#10B981" />
                 <circle cx="142" cy="78" r="4" fill="#10B981" />
                 <circle cx="182" cy="78" r="4" fill="#F59E0B" />
 
-                {/* Message count/activity */}
                 <rect x="150" y="170" width="60" height="40" rx="10" fill="#1F2937" />
                 <text x="180" y="185" textAnchor="middle" fill="white" fontSize="10">
                   1.2k
@@ -315,7 +300,6 @@ export default function AuthPage() {
                   messages
                 </text>
 
-                {/* Network connections */}
                 <path
                   d="M90 105 Q115 120 130 105"
                   stroke="#10B981"
@@ -331,7 +315,6 @@ export default function AuthPage() {
                   strokeDasharray="3,3"
                 />
 
-                {/* Chat features icons */}
                 <g transform="translate(180, 20)">
                   <rect x="0" y="0" width="25" height="25" rx="5" fill="#DBEAFE" />
                   <text x="12.5" y="16" textAnchor="middle" fontSize="12">

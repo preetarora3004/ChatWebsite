@@ -1,4 +1,4 @@
-import { client } from '@repo/db'
+import { client } from '@repo/db/client'
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
 import { authOption } from '@repo/utils';

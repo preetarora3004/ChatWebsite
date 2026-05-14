@@ -2,7 +2,7 @@ import "@repo/ui/styles.css";
 import "./globals.css";
 import type { Metadata } from "next";
 import { Geist } from "next/font/google";
-import { Providers } from '@repo/ui/sessionProvider'
+import { Providers } from '@repo/ui/src/sessionProvider'
 
 const geist = Geist({ subsets: ["latin"] });
 

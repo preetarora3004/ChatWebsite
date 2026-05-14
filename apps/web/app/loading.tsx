@@ -1,7 +1,7 @@
 "use client"
 
 import { useState } from "react"
-import { Loader } from "@repo/ui/landingLoader"
+import { Loader } from "@repo/ui/src/landingLoader"
 
 export default function Home() {
   const [isLoading, setIsLoading] = useState(true)

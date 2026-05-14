@@ -1,11 +1,11 @@
-import { NextAuthOptions } from "next-auth";
+import type { NextAuthOptions } from "next-auth";
 import { JWT } from "next-auth/jwt";
 import { prismaAdapter } from './prismaAdaptor';
 import { providers } from "./provider";
 import { callbacks } from "./callback";
 import jwt from 'jsonwebtoken'
 
-export const authOption: NextAuthOptions = {
+export const authOption = {
 
     adapter: prismaAdapter(),
     providers,
@@ -57,5 +57,4 @@ export const authOption: NextAuthOptions = {
     },
 
     secret: process.env.NEXTAUTH_SECRET
-
-}
+} satisfies NextAuthOptions

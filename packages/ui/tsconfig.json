@@ -1,20 +1,21 @@
 {
-  "extends": "../typescript-config/react-library.json",
-  "compilerOptions": {
-    "baseUrl": "src",               // 👈 important: makes @/* point inside src
-    "rootDir": "src",               // 👈 ensure compiler treats src as root
-    "outDir": "dist",               // 👈 compiled files go here
-    "paths": {
-      "@/*": ["./*"]                // 👈 @/xyz → src/xyz
-    }
-  },
-  "include": [
-    "src",                          // include all source files
-    "../types/**/*.d.ts"            // shared types
-  ],
-  "exclude": [
-    "dist",
-    "build",
-    "node_modules"
-  ]
+   "extends": "../typescript-config/react-library.json",
+   "compilerOptions": {
+      "outDir": "dist",
+      "allowArbitaryExtensions": true,
+      "paths": {
+         "@/*": [
+            "./src/*"
+         ]
+      }
+   },
+   "include": [
+      "src",
+      "../types/**/*.d.ts"
+   ],
+   "exclude": [
+      "dist",
+      "build",
+      "node_modules"
+   ]
 }

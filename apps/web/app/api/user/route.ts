@@ -1,6 +1,6 @@
 import { authOption } from "@repo/utils";
-import { client } from "@repo/db";
-import { getServerSession } from "next-auth";
+import { client } from "@repo/db/client";
+import { getServerSession } from "next-auth/next";
 
 export async function GET(){
 
