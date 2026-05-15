@@ -1,25 +1,43 @@
 {
-  "$schema": "https://turborepo.com/schema.json",
-  "ui": "tui",
-  "tasks": {
-    "build": {
-      "dependsOn": ["^build"],
-      "inputs": ["$TURBO_DEFAULT$", ".env*"],
-      "outputs": ["dist/**", ".next/**", "!.next/cache/**"],
-         "env": ["DATABASE_URL"]
-    },
-    "lint": {
-      "dependsOn": ["^lint"]
-    },
-    "check-types": {
-      "dependsOn": ["^check-types"]
-    },
-    "dev": {
-      "cache": false,
-      "persistent": true
-    },
-    "prisma:generate" : {
-      "outputs" : ["node_module/.prisma/**"]
-    }
-  }
+   "$schema": "https://turborepo.com/schema.json",
+   "ui": "tui",
+   "tasks": {
+      "build": {
+         "dependsOn": [
+            "^build"
+         ],
+         "inputs": [
+            "$TURBO_DEFAULT$",
+            ".env*"
+         ],
+         "outputs": [
+            "dist/**",
+            ".next/**",
+            "!.next/cache/**"
+         ],
+         "env": [
+            "DATABASE_URL",
+            "NEXT_AUTH"
+         ]
+      },
+      "lint": {
+         "dependsOn": [
+            "^lint"
+         ]
+      },
+      "check-types": {
+         "dependsOn": [
+            "^check-types"
+         ]
+      },
+      "dev": {
+         "cache": false,
+         "persistent": true
+      },
+      "prisma:generate": {
+         "outputs": [
+            "node_module/.prisma/**"
+         ]
+      }
+   }
 }
