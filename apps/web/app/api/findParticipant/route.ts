@@ -1,7 +1,7 @@
-import { client } from '@repo/db/client'
+import { client } from '@repo/db/src/index'
 import { NextRequest } from 'next/server';
 import { getServerSession } from 'next-auth';
-import { authOption } from '@repo/utils';
+import { authOption } from '@repo/utils/src/authOption';
 
 export async function GET(req: NextRequest) {
     const userId = req.headers.get('userId'); 

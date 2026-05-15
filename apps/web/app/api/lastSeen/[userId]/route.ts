@@ -1,30 +1,31 @@
-import {client} from '@repo/db/client'
-import { getServerSession } from 'next-auth'
-import { authOption } from '@repo/utils'
+import { client } from "@repo/db/src/index";
+import { getServerSession } from "next-auth";
+import { authOption } from "@repo/utils/src/authOption";
 
-export async function GET(req : Request, {params} : {params : {userId : string}}){
+export async function GET(
+   req: Request,
+   { params }: { params: { userId: string } },
+) {
+   const session = await getServerSession(authOption);
+   const id = (await params).userId;
 
-    const session = await getServerSession(authOption);
-    const id = (await params).userId
+   if (!session || !session.user)
+      return Response.json({ msg: "Not able to find" }, { status: 400 });
 
-    if(!session || !session.user) return Response.json({msg : "Not able to find"}, {status : 400});
+   try {
+      const lastSeen = await client.lastSeen.findFirst({
+         where: {
+            userId: id,
+         },
+         orderBy: { id: "desc" },
+      });
 
-    try{
-        const lastSeen = await client.lastSeen.findFirst({
-            where : {
-                userId : id,
-            },
-            orderBy : {id : "desc"}
-        })
+      if (!lastSeen) {
+         return Response.json({ msg: "User not present" }, { status: 411 });
+      }
 
-        if(!lastSeen){
-            return Response.json({msg : "User not present"}, {status : 411});
-        }
-
-        return Response.json(lastSeen);
-    }
-    catch(e){
-        return Response.json({msg : "Unable to find"}, {status : 400});
-    }
-
+      return Response.json(lastSeen);
+   } catch (e) {
+      return Response.json({ msg: "Unable to find" }, { status: 400 });
+   }
 }

@@ -3,7 +3,7 @@
 import { useSession, signOut } from "next-auth/react";
 import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
-import { useUser } from "@repo/utils";
+import { useUser } from "@repo/ui/src/lib/store";
 import { shallow } from "zustand/shallow";
 import { useSocket } from "@repo/ui/websocketContext";
 

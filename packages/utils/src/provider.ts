@@ -1,5 +1,6 @@
+
 import CredentialsProvider from "next-auth/providers/credentials";
-import { client } from "@repo/db/client";
+import { client } from "@repo/db/src/index";
 import jwt from 'jsonwebtoken';
 
 export const providers = [

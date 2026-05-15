@@ -1,341 +1,584 @@
-"use client"
+"use client";
 
-import { useState, useEffect } from "react"
+import { useState, useEffect } from "react";
 import { signIn } from "next-auth/react";
 import { useRouter } from "next/navigation";
-import { signUp } from '@repo/utils'
-import Loading from './loading'
+import { signUp } from "@repo/utils/src/signUp";
+import Loading from "./loading";
 
-import { User, Lock, Mail } from "lucide-react"
-import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa"
+import { User, Lock, Mail } from "lucide-react";
+import { FaFacebook, FaTwitter, FaLinkedin } from "react-icons/fa";
 
 export default function AuthPage() {
-  const [isSignUpMode, setIsSignUpMode] = useState(false)
+   const [isSignUpMode, setIsSignUpMode] = useState(false);
 
-  const [mount, setmount] = useState(false);
-  const [username, setUsername] = useState("");
-  const [password, setPassword] = useState("");
-  const [error, setError] = useState("");
-  const router = useRouter();
-  const [loading, setLoading] = useState(false);
+   const [mount, setmount] = useState(false);
+   const [username, setUsername] = useState("");
+   const [password, setPassword] = useState("");
+   const [error, setError] = useState("");
+   const router = useRouter();
+   const [loading, setLoading] = useState(false);
 
-  useEffect(() => {
-    setmount(true);
-  }, [])
+   useEffect(() => {
+      setmount(true);
+   }, []);
 
-  if (mount === false) return null;
+   if (mount === false) return null;
 
-  async function signin(e: React.FormEvent) {
-    e.preventDefault();
-    setLoading(true)
-    const res = await signIn("credentials", {
-      username,
-      password,
-      redirect: false,
-      callbackUrl: "/main",
-    });
+   async function signin(e: React.FormEvent) {
+      e.preventDefault();
+      setLoading(true);
+      const res = await signIn("credentials", {
+         username,
+         password,
+         redirect: false,
+         callbackUrl: "/main",
+      });
 
-    setLoading(false)
+      setLoading(false);
 
-
-    if (res?.ok) {
-      router.push(res.url ?? "/main");
-    } else {
-      setError("Invalid username or password");
-    }
-  }
-
-  async function signup(e: React.FormEvent) {
-
-    e.preventDefault();
-    setLoading(true);
-    const res = await signUp(username,password)
-
-    if (res?.ok) {
-      const signInRes = await signIn("credentials", {
-        username,
-        password,
-        redirect: true,
-        callbackUrl: "/main",
+      if (res?.ok) {
+         router.push(res.url ?? "/main");
+      } else {
+         setError("Invalid username or password");
       }
-    );
+   }
 
-    setLoading(false);
+   async function signup(e: React.FormEvent) {
+      e.preventDefault();
+      setLoading(true);
+      const res = await signUp(username, password);
 
-    if (signInRes && signInRes.error) {
-      setError("Failed to sign in after registration. Please log in manually.");
-    }
-    } else {
-      setError("Registration failed. The username might already be taken.");
-    }
-  }
+      if (res?.ok) {
+         const signInRes = await signIn("credentials", {
+            username,
+            password,
+            redirect: true,
+            callbackUrl: "/main",
+         });
 
-  if (loading) {
-    return <Loading />;
-  }
-  
+         setLoading(false);
 
-  return (
-    <div className={`container ${isSignUpMode ? "sign-up-mode" : ""} max-w-full`}>
-      <div className="forms-container">
-        <div className="signin-signup">
-          {/* Sign In Form */}
-          <form onSubmit={signin} className="sign-in-form">
-            <h2 className="title">Sign in</h2>
-            <div className="input-field">
-              <div className="pt-4 pl-2">
-                <User className=" text-black icon" />
-              </div>
-              <input onChange={(e) => {
-                setUsername(e.target.value)
-              }} type="text" placeholder="Username" />
+         if (signInRes && signInRes.error) {
+            setError(
+               "Failed to sign in after registration. Please log in manually.",
+            );
+         }
+      } else {
+         setError("Registration failed. The username might already be taken.");
+      }
+   }
+
+   if (loading) {
+      return <Loading />;
+   }
+
+   return (
+      <div
+         className={`container ${isSignUpMode ? "sign-up-mode" : ""} max-w-full`}
+      >
+         <div className="forms-container">
+            <div className="signin-signup">
+               {/* Sign In Form */}
+               <form onSubmit={signin} className="sign-in-form">
+                  <h2 className="title">Sign in</h2>
+                  <div className="input-field">
+                     <div className="pt-4 pl-2">
+                        <User className=" text-black icon" />
+                     </div>
+                     <input
+                        onChange={(e) => {
+                           setUsername(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="Username"
+                     />
+                  </div>
+                  <div className="input-field">
+                     <div className="pt-4 pl-2">
+                        <Lock className="text-black icon" />
+                     </div>
+                     <input
+                        onChange={(e) => {
+                           setPassword(e.target.value);
+                        }}
+                        type="password"
+                        placeholder="Password"
+                     />
+                  </div>
+                  <div className={`${error ? "pb-4" : ""}`}>
+                     {error && (
+                        <p className="text-[var(--color-error)] font-medium  text-xs ml-2">
+                           {error}
+                        </p>
+                     )}
+                  </div>
+                  <input type="submit" value="Login" className="btn solid" />
+                  <p className="social-text">Or Sign in with social platforms</p>
+                  <div className="social-media">
+                     <a href="#" className="social-icon">
+                        <FaFacebook size={20} />
+                     </a>
+                     <a href="#" className="social-icon">
+                        <FaTwitter size={20} />
+                     </a>
+                     <a href="#" className="social-icon">
+                        <svg
+                           width="20"
+                           height="20"
+                           viewBox="0 0 24 24"
+                           fill="currentColor"
+                        >
+                           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                     </a>
+                     <a href="#" className="social-icon">
+                        <FaLinkedin size={20} />
+                     </a>
+                  </div>
+               </form>
+
+               <form onSubmit={signup} className="sign-up-form">
+                  <h2 className="title">Sign up</h2>
+                  <div className="input-field">
+                     <div className="pt-4 pl-2">
+                        <User className="text-black icon" />
+                     </div>
+                     <input
+                        onChange={(e) => {
+                           setUsername(e.target.value);
+                        }}
+                        type="text"
+                        placeholder="Username"
+                     />
+                  </div>
+
+                  <div className="input-field">
+                     <div className="pt-4 pl-2">
+                        <Lock className=" text-black icon" />
+                     </div>
+                     <input
+                        onChange={(e) => {
+                           setPassword(e.target.value);
+                        }}
+                        type="password"
+                        placeholder="Password"
+                     />
+                  </div>
+                  <input type="submit" className="btn" value="Sign up" />
+                  <p className="social-text">Or Sign up with social platforms</p>
+                  <div className="social-media">
+                     <a href="#" className="social-icon">
+                        <FaFacebook size={20} />
+                     </a>
+                     <a href="#" className="social-icon">
+                        <FaTwitter size={20} />
+                     </a>
+                     <a href="#" className="social-icon">
+                        <svg
+                           width="20"
+                           height="20"
+                           viewBox="0 0 24 24"
+                           fill="currentColor"
+                        >
+                           <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
+                           <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
+                           <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
+                           <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
+                        </svg>
+                     </a>
+                     <a href="#" className="social-icon">
+                        <FaLinkedin size={20} />
+                     </a>
+                  </div>
+               </form>
             </div>
-            <div className="input-field">
-              <div className="pt-4 pl-2">
-                <Lock className="text-black icon" />
-              </div>
-              <input
-                onChange={(e) => {
-                  setPassword(e.target.value)
-                }}
-                type="password" placeholder="Password" />
+         </div>
+
+         <div className="panels-container">
+            <div className="panel left-panel">
+               <div className="content mt-8">
+                  <h3>New here ?</h3>
+                  <p>
+                     Sign up and never miss a message from your friends and
+                     communities.
+                  </p>
+                  <button
+                     className="btn transparent"
+                     onClick={() => setIsSignUpMode(true)}
+                  >
+                     Sign up
+                  </button>
+               </div>
+               <div className="image pl-38">
+                  <svg width="400" height="400" viewBox="0 0 300 300" fill="none">
+                     <g transform="translate(50, 50) scale(1)">
+                        {/* Main chat bubble */}
+                        <rect
+                           x="60"
+                           y="80"
+                           width="120"
+                           height="80"
+                           rx="20"
+                           fill="#F3F4F6"
+                           stroke="#E5E7EB"
+                           strokeWidth="2"
+                        />
+                        <circle cx="85" cy="110" r="3" fill="#10B981" />
+                        <circle cx="100" cy="110" r="3" fill="#10B981" />
+                        <circle cx="115" cy="110" r="3" fill="#10B981" />
+                        <rect
+                           x="75"
+                           y="125"
+                           width="80"
+                           height="3"
+                           rx="1.5"
+                           fill="#9CA3AF"
+                        />
+                        <rect
+                           x="75"
+                           y="135"
+                           width="60"
+                           height="3"
+                           rx="1.5"
+                           fill="#9CA3AF"
+                        />
+
+                        <rect
+                           x="20"
+                           y="40"
+                           width="100"
+                           height="60"
+                           rx="15"
+                           fill="#000000"
+                        />
+                        <rect
+                           x="30"
+                           y="55"
+                           width="60"
+                           height="3"
+                           rx="1.5"
+                           fill="#FFFFFF"
+                        />
+                        <rect
+                           x="30"
+                           y="65"
+                           width="45"
+                           height="3"
+                           rx="1.5"
+                           fill="#FFFFFF"
+                        />
+                        <rect
+                           x="30"
+                           y="75"
+                           width="70"
+                           height="3"
+                           rx="1.5"
+                           fill="#FFFFFF"
+                        />
+
+                        <rect
+                           x="140"
+                           y="120"
+                           width="50"
+                           height="90"
+                           rx="10"
+                           fill="#1F2937"
+                        />
+                        <rect
+                           x="145"
+                           y="130"
+                           width="40"
+                           height="60"
+                           rx="5"
+                           fill="#111827"
+                        />
+                        <circle cx="165" cy="200" r="6" fill="#374151" />
+
+                        <circle cx="175" cy="135" r="8" fill="#EF4444" />
+                        <text
+                           x="175"
+                           y="140"
+                           textAnchor="middle"
+                           fill="white"
+                           fontSize="10"
+                           fontWeight="bold"
+                        >
+                           3
+                        </text>
+
+                        <g transform="translate(30, 170)">
+                           <circle cx="0" cy="0" r="12" fill="#F59E0B" />
+                           <rect
+                              x="-8"
+                              y="12"
+                              width="16"
+                              height="20"
+                              rx="8"
+                              fill="#1F2937"
+                           />
+                        </g>
+
+                        <g transform="translate(80, 170)">
+                           <circle cx="0" cy="0" r="12" fill="#EF4444" />
+                           <rect
+                              x="-8"
+                              y="12"
+                              width="16"
+                              height="20"
+                              rx="8"
+                              fill="#1F2937"
+                           />
+                        </g>
+
+                        <g transform="translate(130, 170)">
+                           <circle cx="0" cy="0" r="12" fill="#8B5CF6" />
+                           <rect
+                              x="-8"
+                              y="12"
+                              width="16"
+                              height="20"
+                              rx="8"
+                              fill="#1F2937"
+                           />
+                        </g>
+
+                        <path
+                           d="M42 180 Q61 175 68 180"
+                           stroke="#10B981"
+                           strokeWidth="2"
+                           fill="none"
+                        />
+                        <path
+                           d="M92 180 Q111 175 118 180"
+                           stroke="#10B981"
+                           strokeWidth="2"
+                           fill="none"
+                        />
+
+                        <circle cx="200" cy="60" r="15" fill="#FEF3C7" />
+                        <text
+                           x="200"
+                           y="67"
+                           textAnchor="middle"
+                           fill="white"
+                           fontSize="16"
+                        >
+                           😊
+                        </text>
+
+                        <circle cx="170" cy="80" r="12" fill="#DBEAFE" />
+                        <text x="170" y="86" textAnchor="middle" fontSize="14">
+                           👍
+                        </text>
+
+                        <circle cx="190" cy="100" r="10" fill="#FEE2E2" />
+                        <text x="190" y="106" textAnchor="middle" fontSize="12">
+                           ❤️
+                        </text>
+
+                        <g transform="translate(10, 10)">
+                           <path
+                              d="M0 20 Q10 10 20 20"
+                              stroke="#10B981"
+                              strokeWidth="2"
+                              fill="none"
+                           />
+                           <path
+                              d="M5 20 Q10 15 15 20"
+                              stroke="#10B981"
+                              strokeWidth="2"
+                              fill="none"
+                           />
+                           <circle cx="10" cy="20" r="2" fill="#10B981" />
+                        </g>
+                     </g>
+                  </svg>
+               </div>
             </div>
-            <div className={`${error ? "pb-4" : ""}`}>
-              {error && (
-                <p className="text-[var(--color-error)] font-medium  text-xs ml-2">{error}</p>
-              )}
+
+            <div className="panel right-panel max-w-full">
+               <div className="content ml-30 mt-10">
+                  <h3>One of us ?</h3>
+                  <p>
+                     Log in to see what your friends are up to and keep the
+                     conversation going.
+                  </p>
+                  <button
+                     className="btn transparent"
+                     onClick={() => setIsSignUpMode(false)}
+                  >
+                     Sign in
+                  </button>
+               </div>
+               <div className="image">
+                  <svg width="400" height="400" viewBox="0 0 300 300" fill="none">
+                     <g transform="translate(50, 50) scale(1)">
+                        <rect
+                           x="60"
+                           y="60"
+                           width="140"
+                           height="100"
+                           rx="25"
+                           fill="#F3F4F6"
+                           stroke="#E5E7EB"
+                           strokeWidth="2"
+                        />
+
+                        <circle cx="90" cy="90" r="15" fill="#F59E0B" />
+                        <circle cx="130" cy="90" r="15" fill="#EF4444" />
+                        <circle cx="170" cy="90" r="15" fill="#8B5CF6" />
+
+                        <rect
+                           x="80"
+                           y="115"
+                           width="60"
+                           height="3"
+                           rx="1.5"
+                           fill="#9CA3AF"
+                        />
+                        <rect
+                           x="80"
+                           y="125"
+                           width="80"
+                           height="3"
+                           rx="1.5"
+                           fill="#9CA3AF"
+                        />
+                        <rect
+                           x="80"
+                           y="135"
+                           width="45"
+                           height="3"
+                           rx="1.5"
+                           fill="#9CA3AF"
+                        />
+
+                        <rect
+                           x="20"
+                           y="20"
+                           width="120"
+                           height="50"
+                           rx="15"
+                           fill="#000000"
+                        />
+                        <text
+                           x="80"
+                           y="35"
+                           textAnchor="middle"
+                           fill="white"
+                           fontSize="10"
+                           fontWeight="bold"
+                        >
+                           Welcome!
+                        </text>
+                        <text
+                           x="80"
+                           y="50"
+                           textAnchor="middle"
+                           fill="white"
+                           fontSize="8"
+                        >
+                           Join the conversation
+                        </text>
+
+                        <g transform="translate(30, 180)">
+                           <circle cx="0" cy="0" r="20" fill="#10B981" />
+                           <text
+                              x="0"
+                              y="6"
+                              textAnchor="middle"
+                              fill="white"
+                              fontSize="16"
+                              fontWeight="bold"
+                           >
+                              +
+                           </text>
+                        </g>
+
+                        <circle cx="102" cy="78" r="4" fill="#10B981" />
+                        <circle cx="142" cy="78" r="4" fill="#10B981" />
+                        <circle cx="182" cy="78" r="4" fill="#F59E0B" />
+
+                        <rect
+                           x="150"
+                           y="170"
+                           width="60"
+                           height="40"
+                           rx="10"
+                           fill="#1F2937"
+                        />
+                        <text
+                           x="180"
+                           y="185"
+                           textAnchor="middle"
+                           fill="white"
+                           fontSize="10"
+                        >
+                           1.2k
+                        </text>
+                        <text
+                           x="180"
+                           y="200"
+                           textAnchor="middle"
+                           fill="#9CA3AF"
+                           fontSize="8"
+                        >
+                           messages
+                        </text>
+
+                        <path
+                           d="M90 105 Q115 120 130 105"
+                           stroke="#10B981"
+                           strokeWidth="1.5"
+                           fill="none"
+                           strokeDasharray="3,3"
+                        />
+                        <path
+                           d="M130 105 Q155 120 170 105"
+                           stroke="#10B981"
+                           strokeWidth="1.5"
+                           fill="none"
+                           strokeDasharray="3,3"
+                        />
+
+                        <g transform="translate(180, 20)">
+                           <rect
+                              x="0"
+                              y="0"
+                              width="25"
+                              height="25"
+                              rx="5"
+                              fill="#DBEAFE"
+                           />
+                           <text x="12.5" y="16" textAnchor="middle" fontSize="12">
+                              📷
+                           </text>
+                        </g>
+
+                        <g transform="translate(180, 50)">
+                           <rect
+                              x="0"
+                              y="0"
+                              width="25"
+                              height="25"
+                              rx="5"
+                              fill="#FEE2E2"
+                           />
+                           <text x="12.5" y="16" textAnchor="middle" fontSize="12">
+                              🎵
+                           </text>
+                        </g>
+                     </g>
+                  </svg>
+               </div>
             </div>
-            <input type="submit" value="Login" className="btn solid" />
-            <p className="social-text">Or Sign in with social platforms</p>
-            <div className="social-media">
-              <a href="#" className="social-icon">
-                <FaFacebook size={20} />
-              </a>
-              <a href="#" className="social-icon">
-                <FaTwitter size={20} />
-              </a>
-              <a href="#" className="social-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                </svg>
-              </a>
-              <a href="#" className="social-icon">
-                <FaLinkedin size={20} />
-              </a>
-            </div>
-          </form>
+         </div>
 
-          <form onSubmit={signup}className="sign-up-form">
-            <h2 className="title">Sign up</h2>
-            <div className="input-field">
-              <div className="pt-4 pl-2">
-                <User className="text-black icon" />
-              </div>
-              <input 
-              onChange={(e)=>{
-                setUsername(e.target.value)
-              }}
-              type="text" placeholder="Username" />
-            </div>
-
-            <div className="input-field">
-              <div className="pt-4 pl-2">
-                <Lock className=" text-black icon" />
-              </div>
-              <input 
-              onChange={(e)=>{
-                setPassword(e.target.value)
-              }}
-              type="password" placeholder="Password" />
-            </div>
-            <input type="submit" className="btn" value="Sign up" />
-            <p className="social-text">Or Sign up with social platforms</p>
-            <div className="social-media">
-              <a href="#" className="social-icon">
-                <FaFacebook size={20} />
-              </a>
-              <a href="#" className="social-icon">
-                <FaTwitter size={20} />
-              </a>
-              <a href="#" className="social-icon">
-                <svg width="20" height="20" viewBox="0 0 24 24" fill="currentColor">
-                  <path d="M22.56 12.25c0-.78-.07-1.53-.2-2.25H12v4.26h5.92c-.26 1.37-1.04 2.53-2.21 3.31v2.77h3.57c2.08-1.92 3.28-4.74 3.28-8.09z" />
-                  <path d="M12 23c2.97 0 5.46-.98 7.28-2.66l-3.57-2.77c-.98.66-2.23 1.06-3.71 1.06-2.86 0-5.29-1.93-6.16-4.53H2.18v2.84C3.99 20.53 7.7 23 12 23z" />
-                  <path d="M5.84 14.09c-.22-.66-.35-1.36-.35-2.09s.13-1.43.35-2.09V7.07H2.18C1.43 8.55 1 10.22 1 12s.43 3.45 1.18 4.93l2.85-2.22.81-.62z" />
-                  <path d="M12 5.38c1.62 0 3.06.56 4.21 1.64l3.15-3.15C17.45 2.09 14.97 1 12 1 7.7 1 3.99 3.47 2.18 7.07l3.66 2.84c.87-2.6 3.3-4.53 6.16-4.53z" />
-                </svg>
-              </a>
-              <a href="#" className="social-icon">
-                <FaLinkedin size={20} />
-              </a>
-            </div>
-          </form>
-        </div>
-      </div>
-
-      <div className="panels-container">
-        <div className="panel left-panel">
-          <div className="content mt-8">
-            <h3>New here ?</h3>
-            <p>Sign up and never miss a message from your friends and communities.</p>
-            <button className="btn transparent" onClick={() => setIsSignUpMode(true)}>
-              Sign up
-            </button>
-          </div>
-          <div className="image pl-38">
-            <svg width="400" height="400" viewBox="0 0 300 300" fill="none">
-              <g transform="translate(50, 50) scale(1)">
-                {/* Main chat bubble */}
-                <rect x="60" y="80" width="120" height="80" rx="20" fill="#F3F4F6" stroke="#E5E7EB" strokeWidth="2" />
-                <circle cx="85" cy="110" r="3" fill="#10B981" />
-                <circle cx="100" cy="110" r="3" fill="#10B981" />
-                <circle cx="115" cy="110" r="3" fill="#10B981" />
-                <rect x="75" y="125" width="80" height="3" rx="1.5" fill="#9CA3AF" />
-                <rect x="75" y="135" width="60" height="3" rx="1.5" fill="#9CA3AF" />
-
-                <rect x="20" y="40" width="100" height="60" rx="15" fill="#000000" />
-                <rect x="30" y="55" width="60" height="3" rx="1.5" fill="#FFFFFF" />
-                <rect x="30" y="65" width="45" height="3" rx="1.5" fill="#FFFFFF" />
-                <rect x="30" y="75" width="70" height="3" rx="1.5" fill="#FFFFFF" />
-
-                <rect x="140" y="120" width="50" height="90" rx="10" fill="#1F2937" />
-                <rect x="145" y="130" width="40" height="60" rx="5" fill="#111827" />
-                <circle cx="165" cy="200" r="6" fill="#374151" />
-
-                <circle cx="175" cy="135" r="8" fill="#EF4444" />
-                <text x="175" y="140" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
-                  3
-                </text>
-
-                <g transform="translate(30, 170)">
-                  <circle cx="0" cy="0" r="12" fill="#F59E0B" />
-                  <rect x="-8" y="12" width="16" height="20" rx="8" fill="#1F2937" />
-                </g>
-
-                <g transform="translate(80, 170)">
-                  <circle cx="0" cy="0" r="12" fill="#EF4444" />
-                  <rect x="-8" y="12" width="16" height="20" rx="8" fill="#1F2937" />
-                </g>
-
-                <g transform="translate(130, 170)">
-                  <circle cx="0" cy="0" r="12" fill="#8B5CF6" />
-                  <rect x="-8" y="12" width="16" height="20" rx="8" fill="#1F2937" />
-                </g>
-
-                <path d="M42 180 Q61 175 68 180" stroke="#10B981" strokeWidth="2" fill="none" />
-                <path d="M92 180 Q111 175 118 180" stroke="#10B981" strokeWidth="2" fill="none" />
-
-                <circle cx="200" cy="60" r="15" fill="#FEF3C7" />
-                <text x="200" y="67" textAnchor="middle" fill="white" fontSize="16">
-                  😊
-                </text>
-
-                <circle cx="170" cy="80" r="12" fill="#DBEAFE" />
-                <text x="170" y="86" textAnchor="middle" fontSize="14">
-                  👍
-                </text>
-
-                <circle cx="190" cy="100" r="10" fill="#FEE2E2" />
-                <text x="190" y="106" textAnchor="middle" fontSize="12">
-                  ❤️
-                </text>
-
-                <g transform="translate(10, 10)">
-                  <path d="M0 20 Q10 10 20 20" stroke="#10B981" strokeWidth="2" fill="none" />
-                  <path d="M5 20 Q10 15 15 20" stroke="#10B981" strokeWidth="2" fill="none" />
-                  <circle cx="10" cy="20" r="2" fill="#10B981" />
-                </g>
-              </g>
-            </svg>
-          </div>
-        </div>
-
-        <div className="panel right-panel max-w-full">
-          <div className="content ml-30 mt-10">
-            <h3>One of us ?</h3>
-            <p>Log in to see what your friends are up to and keep the conversation going.</p>
-            <button className="btn transparent" onClick={() => setIsSignUpMode(false)}>
-              Sign in
-            </button>
-          </div>
-          <div className="image">
-            <svg width="400" height="400" viewBox="0 0 300 300" fill="none">
-              <g transform="translate(50, 50) scale(1)">
-                <rect x="60" y="60" width="140" height="100" rx="25" fill="#F3F4F6" stroke="#E5E7EB" strokeWidth="2" />
-
-                <circle cx="90" cy="90" r="15" fill="#F59E0B" />
-                <circle cx="130" cy="90" r="15" fill="#EF4444" />
-                <circle cx="170" cy="90" r="15" fill="#8B5CF6" />
-
-                <rect x="80" y="115" width="60" height="3" rx="1.5" fill="#9CA3AF" />
-                <rect x="80" y="125" width="80" height="3" rx="1.5" fill="#9CA3AF" />
-                <rect x="80" y="135" width="45" height="3" rx="1.5" fill="#9CA3AF" />
-
-                <rect x="20" y="20" width="120" height="50" rx="15" fill="#000000" />
-                <text x="80" y="35" textAnchor="middle" fill="white" fontSize="10" fontWeight="bold">
-                  Welcome!
-                </text>
-                <text x="80" y="50" textAnchor="middle" fill="white" fontSize="8">
-                  Join the conversation
-                </text>
-
-                <g transform="translate(30, 180)">
-                  <circle cx="0" cy="0" r="20" fill="#10B981" />
-                  <text x="0" y="6" textAnchor="middle" fill="white" fontSize="16" fontWeight="bold">
-                    +
-                  </text>
-                </g>
-
-                <circle cx="102" cy="78" r="4" fill="#10B981" />
-                <circle cx="142" cy="78" r="4" fill="#10B981" />
-                <circle cx="182" cy="78" r="4" fill="#F59E0B" />
-
-                <rect x="150" y="170" width="60" height="40" rx="10" fill="#1F2937" />
-                <text x="180" y="185" textAnchor="middle" fill="white" fontSize="10">
-                  1.2k
-                </text>
-                <text x="180" y="200" textAnchor="middle" fill="#9CA3AF" fontSize="8">
-                  messages
-                </text>
-
-                <path
-                  d="M90 105 Q115 120 130 105"
-                  stroke="#10B981"
-                  strokeWidth="1.5"
-                  fill="none"
-                  strokeDasharray="3,3"
-                />
-                <path
-                  d="M130 105 Q155 120 170 105"
-                  stroke="#10B981"
-                  strokeWidth="1.5"
-                  fill="none"
-                  strokeDasharray="3,3"
-                />
-
-                <g transform="translate(180, 20)">
-                  <rect x="0" y="0" width="25" height="25" rx="5" fill="#DBEAFE" />
-                  <text x="12.5" y="16" textAnchor="middle" fontSize="12">
-                    📷
-                  </text>
-                </g>
-
-                <g transform="translate(180, 50)">
-                  <rect x="0" y="0" width="25" height="25" rx="5" fill="#FEE2E2" />
-                  <text x="12.5" y="16" textAnchor="middle" fontSize="12">
-                    🎵
-                  </text>
-                </g>
-              </g>
-            </svg>
-          </div>
-        </div>
-      </div>
-
-      <style jsx>{`
+         <style jsx>{`
         .container {
           position: absolute;
           width: 100vw;
@@ -736,6 +979,6 @@ export default function AuthPage() {
           }
         }
       `}</style>
-    </div>
-  )
+      </div>
+   );
 }

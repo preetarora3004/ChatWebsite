@@ -1,37 +1,37 @@
-import {client} from '@repo/db/client';
+import { client } from '@repo/db/src/index';
 import { getServerSession } from 'next-auth';
-import { authOption } from '@repo/utils';
+import { authOption } from '@repo/utils/src/authOption';
 
-export async function POST(req : Request , {params} : {params : {chatId : string}}){
-    
-    const body = await req.json();
-    const {username} : {username : string} = body;
-    const chatId = (await params).chatId;
-    const session = await getServerSession(authOption);
+export async function POST(req: Request, { params }: { params: { chatId: string } }) {
 
-    if(!session || !session?.user){ return Response.json({msg : "Unauthorized User"}, {status : 401})};
+   const body = await req.json();
+   const { username }: { username: string } = body;
+   const chatId = (await params).chatId;
+   const session = await getServerSession(authOption);
 
-    try{
-        const participant = await client.user.findUnique({
-            where : {
-                username : username
-            }
-        })
+   if (!session || !session?.user) { return Response.json({ msg: "Unauthorized User" }, { status: 401 }) };
 
-        if(!participant?.id) return Response.json({msg : "Unable to find user"}, {status : 400});
+   try {
+      const participant = await client.user.findUnique({
+         where: {
+            username: username
+         }
+      })
 
-        const addParticipant = await client.chatParticipant.create({
-            data : {
-                userId : participant.id,
-                chatId : chatId
-            }
-        })
+      if (!participant?.id) return Response.json({ msg: "Unable to find user" }, { status: 400 });
 
-        return Response.json({msg : "Participant Created",addParticipant});
+      const addParticipant = await client.chatParticipant.create({
+         data: {
+            userId: participant.id,
+            chatId: chatId
+         }
+      })
 
-    }
-    catch(error){
-        return Response.json({msg : "Unable to create chat", error}, {status : 400});
-    }
+      return Response.json({ msg: "Participant Created", addParticipant });
+
+   }
+   catch (error) {
+      return Response.json({ msg: "Unable to create chat", error }, { status: 400 });
+   }
 
 }

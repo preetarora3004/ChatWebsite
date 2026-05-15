@@ -1,20 +1,19 @@
 {
-  "compilerOptions": {
-    "outDir": "dist",
-    "module": "ESNext",
-    "ignoreDeprecations": "6.0",
-    "target": "ES2023",
-    "declaration" : true,
-    "moduleResolution" : "bundler",
-    "esModuleInterop": true,                  
-    "allowSyntheticDefaultImports": true,     
-    "skipLibCheck": true,                    
-    "forceConsistentCasingInFileNames": true, 
-    "isolatedModules": true,
-    "strict": true
-  },
-  "include": ["./src/**/*.ts", "./*.ts"]
+   "compilerOptions": {
+      "rootDir": "./src",
+      "outDir": "./dist",
+      "module": "NodeNext",
+      "ignoreDeprecations": "6.0",
+      "target": "ES2023",
+      "allowImportingTsExtensions": true,
+      "declaration": true,
+      "moduleResolution": "node16",
+      "esModuleInterop": true,
+      "allowSyntheticDefaultImports": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "isolatedModules": true,
+      "strict": true
+   }
 }
-
-
 

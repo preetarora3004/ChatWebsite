@@ -8,6 +8,8 @@
       ],
       "target": "es2023",
       "allowArbitraryExtensions": true,
+      "allowImportingTsExtensions": true,
+      "noEmit": true,
       "module": "esnext",
       "moduleResolution": "bundler",
       "declaration": true,
@@ -19,7 +21,7 @@
             "packages/ui/src/*"
          ],
          "@repo/db": [
-            "packages/db/dist/prisma/client.ts"
+            "../../packages/src/**/*.ts"
          ]
       }
    },
@@ -31,6 +33,7 @@
       "next-env.d.ts",
       "next.config.ts",
       ".next/types/**/*.ts",
+      "../../packages/db/src/**/*.ts",
       "../../packages/types/next-auth.d.ts"
    ],
    "exclude": [

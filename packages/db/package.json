@@ -1,43 +1,35 @@
 {
-  "name": "@repo/db",
-  "version": "1.0.0",
-  "description": "",
-  "files": [
-    "src",
-    "prisma"
-  ],
-  "exports": {
-    "./client": "./src/index.ts",
-    "./next": {
-      "types": "./dist/next.d.ts",
-      "import": "./next.ts",
-      "require": "./dist/next.cjs"
-    }
-  },
-  "scripts": {
-    "test": "echo \"Error: no test specified\" && exit 1",
-    "build": "tsup ./src/index.ts next.ts --format cjs,esm --dts && prisma generate",
-    "prisma:generate": "prisma generate",
-    "postinstall": "prisma generate"
-  },
-  "keywords": [],
-  "author": "",
-  "license": "ISC",
-  "type": "module",
-  "prisma": {
-    "schema": "prisma/schema.prisma"
-  },
-  "dependencies": {
-    "@prisma/adapter-pg": "^7.8.0",
-    "@prisma/client": "^7.8.0",
-    "dotenv": "^17.4.2",
-    "pg": "^8.20.0",
-    "server-only": "^0.0.1"
-  },
-  "devDependencies": {
-    "@types/dotenv": "^8.2.3",
-    "prisma": "^7.8.0",
-    "tsup": "^8.5.1",
-    "typescript": "^6.0.3"
-  }
+   "name": "@repo/db",
+   "version": "1.0.0",
+   "description": "",
+   "files": [
+      "src",
+      "prisma"
+   ],
+   "scripts": {
+      "test": "echo \"Error: no test specified\" && exit 1",
+      "build": "tsup ./src/index.ts next.ts --format cjs,esm --dts && prisma generate",
+      "prisma:generate": "prisma generate",
+      "postinstall": "prisma generate"
+   },
+   "keywords": [],
+   "author": "",
+   "license": "ISC",
+   "type": "module",
+   "prisma": {
+      "schema": "prisma/schema.prisma"
+   },
+   "dependencies": {
+      "@prisma/adapter-pg": "^7.8.0",
+      "@prisma/client": "^7.8.0",
+      "dotenv": "^17.4.2",
+      "pg": "^8.20.0",
+      "server-only": "^0.0.1"
+   },
+   "devDependencies": {
+      "@types/dotenv": "^8.2.3",
+      "prisma": "^7.8.0",
+      "tsup": "^8.5.1",
+      "typescript": "^6.0.3"
+   }
 }

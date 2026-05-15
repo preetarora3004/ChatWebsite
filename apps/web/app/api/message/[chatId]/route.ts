@@ -1,6 +1,6 @@
-import { client } from "@repo/db/client"
+import { client } from "@repo/db/src/index"
 import { getServerSession } from "next-auth";
-import { authOption } from "@repo/utils";
+import { authOption } from "@repo/utils/src/authOption";
 
 export async function POST(req: Request, { params }: { params: { chatId: string } }) {
 
