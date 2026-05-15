@@ -17,7 +17,8 @@
          ],
          "env": [
             "DATABASE_URL",
-            "NEXT_AUTH"
+            "NEXT_AUTH",
+            "NEXTAUTH_URL"
          ]
       },
       "lint": {
