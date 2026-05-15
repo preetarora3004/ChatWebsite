@@ -8,7 +8,7 @@
    ],
    "scripts": {
       "test": "echo \"Error: no test specified\" && exit 1",
-      "build": "tsup ./src/index.ts next.ts --format cjs,esm --dts && prisma generate",
+      "build": "tsup ./index.ts --format cjs,esm --dts && prisma generate",
       "prisma:generate": "prisma generate",
       "postinstall": "prisma generate"
    },
