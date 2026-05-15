@@ -8,8 +8,6 @@
       ],
       "target": "es2023",
       "allowArbitraryExtensions": true,
-      "allowImportingTsExtensions": true,
-      "noEmit": true,
       "module": "esnext",
       "moduleResolution": "bundler",
       "declaration": true,

@@ -8,10 +8,8 @@
          ]
       },
       "module": "esnext",
-      "noEmit": true,
       "moduleResolution": "bundler",
       "esModuleInterop": true,
-      "allowImportingTsExtensions": true,
       "allowSyntheticDefaultImports": true,
       "skipLibCheck": true,
       "forceConsistentCasingInFileNames": true,
