@@ -1,47 +1,46 @@
-
 import CredentialsProvider from "next-auth/providers/credentials";
-import { client } from "@repo/db/src/index";
-import jwt from 'jsonwebtoken';
+import { client } from "@repo/db/index";
+import jwt from "jsonwebtoken";
 
 export const providers = [
+   CredentialsProvider({
+      id: "credentials",
+      name: "Credentials",
 
-    CredentialsProvider({
-        id : "credentials",
-        name : "Credentials",
+      credentials: {
+         username: { label: "Username", type: "text", placeholder: "@gmail.com" },
+         password: { label: "Password", type: "password", placeholder: "****" },
+      },
 
-        credentials : {
-            username :  {label : "Username", type : "text", placeholder : "@gmail.com"},
-            password : {label : "Password", type : "password", placeholder : "****"}
-        },
+      async authorize(credentials: Record<string, string> | undefined) {
+         const { username, password } = credentials ?? {};
 
-        async authorize(credentials : Record<string,string> | undefined){
-            
-            const {username, password} = credentials ?? {};
+         if (!username || !password) return null;
 
-            if(!username || !password) return null;
+         const user = await client.user.findUnique({
+            where: {
+               username: username,
+            },
+         });
 
-            const user = await client.user.findUnique({
-                where : {
-                    username : username,
-                }
-            });
+         console.log("USER:", user);
 
-            if(!user || password !== user?.hashedPassword) return null;
+         if (!user || password !== user?.hashedPassword) return null;
 
-            const token = jwt.sign(
-                {
-                    id : user.id,
-                    username : user.username
-                },
-                process.env.NEXTAUTH_SECRET!,
-                { expiresIn : "1h"}
-            );
+         const token = jwt.sign(
+            {
+               id: user.id,
+               username: user.username,
+            },
+            process.env.NEXTAUTH_SECRET!,
+            { expiresIn: "1h" },
+         );
 
-            return{
-                id : user.id,
-                username : user.username,
-                token
-            }
-        },
-    })
-]
+         return {
+            id: user.id,
+            username: user.username,
+            token,
+         };
+      },
+   }),
+];

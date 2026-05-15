@@ -1,7 +1,9 @@
 {
    "compilerOptions": {
+      "rootDir": "./src",
+      "outDir": "./dist",
       "declaration": true,
-      "target": "ES2020",
+      "target": "ES2023",
       "paths": {
          "@repo/db/*": [
             "../db/src/*"

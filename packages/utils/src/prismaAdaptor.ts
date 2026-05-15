@@ -1,15 +1,9 @@
-import {PrismaAdapter} from '@next-auth/prisma-adapter'
-import {client} from '@repo/db/src/index'
+import { PrismaAdapter } from "@next-auth/prisma-adapter";
+import { client } from "@repo/db/index";
 
-export function prismaAdapter(){
-
-    const baseAdapter = PrismaAdapter(client);
-    return {
-        ...baseAdapter
-    }
-
+export function prismaAdapter() {
+   const baseAdapter = PrismaAdapter(client);
+   return {
+      ...baseAdapter,
+   };
 }
-
-
-
-

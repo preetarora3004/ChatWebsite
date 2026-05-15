@@ -1,4 +1,4 @@
-import { client } from "@repo/db/src/index";
+import { client } from "@repo/db/index";
 
 export async function POST(req : Request){
 

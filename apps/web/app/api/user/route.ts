@@ -1,5 +1,5 @@
 import { authOption } from "@repo/utils/src/authOption";
-import { client } from "@repo/db/src/index";
+import { client } from "@repo/db/index";
 import { getServerSession } from "next-auth/next";
 
 export async function GET(){
