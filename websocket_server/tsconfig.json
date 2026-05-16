@@ -14,7 +14,7 @@
    },
    "include": [
       "./src",
-      "../packages/db/src/**/*.ts"
+      "../packages/db/**/*.ts"
    ],
    "exclude": [
       "node_modules",
