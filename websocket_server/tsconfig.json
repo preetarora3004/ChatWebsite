@@ -1,9 +1,10 @@
 {
    "compilerOptions": {
+      "rootDir": "./src",
+      "outDir": "./dist",
       "target": "es2023",
       "module": "NodeNext",
       "moduleResolution": "nodenext",
-      "allowImportingTsExtensions": true,
       "rewriteRelativeImportExtensions": true,
       "declaration": true,
       "esModuleInterop": true,

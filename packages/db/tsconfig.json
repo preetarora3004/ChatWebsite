@@ -3,6 +3,7 @@
       "module": "NodeNext",
       "ignoreDeprecations": "6.0",
       "target": "ES2023",
+      "rewriteRelativeImportExtensions": true,
       "declaration": true,
       "moduleResolution": "node16",
       "esModuleInterop": true,
@@ -13,4 +14,3 @@
       "strict": true
    }
 }
-
