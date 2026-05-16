@@ -18,7 +18,8 @@
          "env": [
             "DATABASE_URL",
             "NEXT_AUTH",
-            "NEXTAUTH_URL"
+            "NEXTAUTH_URL",
+            "SOCKET_URL_PROD"
          ]
       },
       "lint": {
