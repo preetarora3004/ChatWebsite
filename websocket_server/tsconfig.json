@@ -13,8 +13,7 @@
       "skipLibCheck": true
    },
    "include": [
-      "./src",
-      "../packages/db/**/*.ts"
+      "./src"
    ],
    "exclude": [
       "node_modules",
