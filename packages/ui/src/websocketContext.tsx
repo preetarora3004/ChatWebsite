@@ -2,6 +2,7 @@
 
 import { createContext, useContext, useEffect, useState, useRef } from "react";
 import { useSession } from "next-auth/react";
+import {env} from "@repo/utils/src/config.env"
 
 type WSContextType = {
   socket: WebSocket | null;
@@ -18,12 +19,13 @@ export const WebSocketProvider = ({ children }: { children: React.ReactNode }) =
 
   const retryRef = useRef(0);
   const retryTimeout = useRef<NodeJS.Timeout | null>(null);
+  const url = env.socket_dev ?? env.socket_prod;
 
   const connect = () => {
     const token = session?.user?.token;
     if (!token) return;
 
-    const ws = new WebSocket(`https://chat-app-sparkling-pond-3900.fly.dev/?token=${token}`);
+    const ws = new WebSocket(`${url}/?token=${token}`);
 
     ws.onopen = () => {
       console.log("WebSocket connected");

@@ -7,6 +7,9 @@
       "paths": {
          "@repo/db/*": [
             "../db/src/*"
+         ],
+         "@repo/utils/*": [
+            "../utils/src/*"
          ]
       },
       "module": "esnext",
@@ -21,7 +24,8 @@
    "include": [
       "src",
       "../types/**/*.d.ts",
-      "../db/src/**/*.ts"
+      "../db/src/**/*.ts",
+      "../utils/src/**/*.ts"
    ],
    "exclude": [
       "dist",
