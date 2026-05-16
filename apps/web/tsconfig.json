@@ -31,7 +31,6 @@
       "next-env.d.ts",
       "next.config.ts",
       ".next/types/**/*.ts",
-      "../../packages/db/src/**/*.ts",
       "../../packages/types/next-auth.d.ts"
    ],
    "exclude": [
