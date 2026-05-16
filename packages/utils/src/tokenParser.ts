@@ -1,4 +1,3 @@
-import jwt from 'jsonwebtoken'
 import { getToken, JWT } from 'next-auth/jwt';
 import { NextRequest } from 'next/server';
 
