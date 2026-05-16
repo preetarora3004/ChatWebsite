@@ -60,6 +60,7 @@ async function broadcastMsg(chatId: string, msg: MsgType, excludeuserId?: string
 
 async function notifyPresence(userId: string, isAlive: boolean) {
 
+
     const presenceMsg = JSON.stringify({
         event: "system",
         payload: { userId, isAlive }

@@ -7,6 +7,7 @@ import { useUser, type MessageType } from "@repo/ui/src/lib/store";
 import { shallow } from "zustand/shallow";
 import { useSocket } from "@repo/ui/src/websocketContext";
 import LoadingPage from "./loading";
+import {env} from "@repo/utils/src/config.env"
 
 function generateUUID(): string {
    const cryptoObj = globalThis.crypto as Crypto | undefined;
@@ -157,6 +158,8 @@ export default function ChatMergedUI() {
          socket.removeEventListener("message", handleSocketMessage);
       };
    }, [socket, activeUser?.id]);
+
+   const url = env.socket_prod ?? env.socket_dev
 
    const activeMessages = useMemo(() => {
       if (!chatId?.id) return [];
