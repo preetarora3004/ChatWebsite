@@ -24,3 +24,5 @@ export async function POST(req : Request){
         return Response.json({msg : "Unable to create chat"}, {status : 400});
     }
 }
+
+

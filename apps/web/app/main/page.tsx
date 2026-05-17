@@ -6,18 +6,7 @@ import { useRouter } from "next/navigation";
 import { useUser } from "@repo/ui/src/lib/store";
 import { shallow } from "zustand/shallow";
 import { useSocket } from "@repo/ui/websocketContext";
-
-function useAuthGuard(loadUser: () => Promise<void>) {
-   const { status } = useSession();
-
-   useEffect(() => {
-      if (status === "authenticated") {
-         loadUser();
-      }
-   }, [status, loadUser]);
-
-   return { status };
-}
+import { useAuthGuard } from "@repo/ui/src/hooks/auth";
 
 function escapeRegex(str: string) {
    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
@@ -125,7 +114,7 @@ export default function ChatMergedUI() {
 
    useEffect(() => {
       const sender = users.find((e) => { });
-   }, [messages]);
+   }, [messages]);  //------------------------------------>> ??
 
    if (status !== "authenticated" || !data) return null;
 
@@ -155,7 +144,7 @@ export default function ChatMergedUI() {
          console.error("Chat creation failed:", err);
       }
 
-      lastSeenFetch(userId);
+      lastSeenFetch(userId); //-------> Early return in try
    };
 
    return (

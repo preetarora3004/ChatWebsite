@@ -8,6 +8,7 @@ import { shallow } from "zustand/shallow";
 import { useSocket } from "@repo/ui/src/websocketContext";
 import LoadingPage from "./loading";
 import {env} from "@repo/utils/src/config.env"
+import { useAuthGuard } from "@repo/ui/hooks/auth";
 
 function generateUUID(): string {
    const cryptoObj = globalThis.crypto as Crypto | undefined;
@@ -27,17 +28,6 @@ function generateUUID(): string {
    return `${Date.now().toString(16)}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}-${Math.random().toString(16).slice(2)}`;
 }
 
-function useAuthGuard(loadUser: () => Promise<void>) {
-   const { status } = useSession();
-
-   useEffect(() => {
-      if (status === "authenticated") {
-         loadUser();
-      }
-   }, [status, loadUser]);
-
-   return { status };
-}
 
 function escapeRegex(str: string) {
    return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
