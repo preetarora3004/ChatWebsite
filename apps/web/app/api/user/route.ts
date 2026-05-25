@@ -2,16 +2,15 @@ import { authOption } from "@repo/utils/src/authOption";
 import { client } from "@repo/db";
 import { getServerSession } from "next-auth/next";
 
-export async function GET(){
+export async function GET() {
+   const session = await getServerSession(authOption);
 
-    const session = await getServerSession(authOption);
+   if (!session || !session.user)
+      return Response.json({ msg: "Unauthorized" }, { status: 401 });
 
-    if(!session || !session.user) return Response.json({msg : "Unauthorized"}, {status : 401});
+   const user = await client.user.findMany({
+      where: { id: { not: session.user.id } },
+   });
 
-    const user = await client.user.findMany({
-        where : {id : {not : session.user.id}}
-    });
-
-    return Response.json({users : user});
+   return Response.json({ users: user });
 }
-

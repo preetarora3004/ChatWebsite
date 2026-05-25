@@ -1,15 +1,14 @@
 import { useEffect } from "react";
 import { useSession } from "next-auth/react";
 
-export function useAuthGuard(loadUser: () => Promise<void>) {
+export function useAuthGuard() {
    const { status } = useSession();
 
    useEffect(() => {
       if (status === "authenticated") {
-         loadUser();
+         return;
       }
-   }, [status, loadUser]);
+   }, [status]);
 
    return { status };
 }
-

@@ -48,7 +48,7 @@ export async function GET(_: Request) {
 
       return Response.json(
          {
-            chat: chat,
+           chat: chat,
          },
          { status: 200 },
       );
