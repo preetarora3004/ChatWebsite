@@ -13,8 +13,7 @@ if(!url){
 export const client =
   globalForPrisma.prisma ||
   new PrismaClient({
-    adapter: new PrismaPg({connectionString : process.env.DATABASE_URL}),
-    log : ["query", "error", "warn"]
+    adapter: new PrismaPg({connectionString : process.env.DATABASE_URL})
   });
 
 if (process.env.NODE_ENV !== "production") globalForPrisma.prisma = client;

@@ -5,8 +5,7 @@ import { useEffect, useMemo, useRef, useState } from "react";
 import { useRouter } from "next/navigation";
 import { useUser, type MessageType } from "@repo/ui/src/lib/store";
 import { shallow } from "zustand/shallow";
-import { useSocket } from "@repo/ui/src/websocketContext";
-import LoadingPage from "../loading";
+import { useSocket } from "@repo/ui/websocketContext";
 import { env } from "@repo/utils/src/config.env";
 import { useAuthGuard } from "@repo/ui/hooks/auth";
 
@@ -32,10 +31,11 @@ function escapeRegex(str: string) {
     return str.replace(/[.*+?^${}()|[\]\\]/g, "\\$&");
 }
 
-export default function ChatMergedUI() {
+export function Chat({ list }: { list: any }) {
     const router = useRouter();
     const inputRef = useRef<HTMLInputElement>(null);
     const scrollRef = useRef<HTMLDivElement>(null);
+    const [load, setLoad] = useState(false);
 
     const { socket, send } = useSocket();
 
@@ -86,8 +86,6 @@ export default function ChatMergedUI() {
     const { status } = useAuthGuard();
     const { data } = useSession();
 
-    console.log(status);
-
     //   useEffect(() => {
     //      const getMessage = async () => {
     //         if (chatId?.id) {
@@ -109,10 +107,6 @@ export default function ChatMergedUI() {
         const regex = new RegExp(escapeRegex(query), "i");
         return users.filter((u) => regex.test(u.username));
     }, [users, query]);
-
-    useEffect(() => {
-        console.log("rendered");
-    }, [activeUser]);
 
     useEffect(() => {
         if (!socket) return;
@@ -178,13 +172,11 @@ export default function ChatMergedUI() {
         setLoading(true);
 
         try {
-            console.log(chatId);
-            await fetchMessage(chatId);
-            if (messages.length !== 0) {
+            const data = await fetchMessage(chatId);
+            if (!data || data.length !== 0) {
                 setActiveUser(userId, username);
                 setChatId(chatId);
                 setLoading(false);
-
                 return router.push(`/main/${username}`);
             }
 
@@ -267,112 +259,100 @@ export default function ChatMergedUI() {
         }
     }
 
-    return activeUser.id ? (
-        <main
-            className={`h-full flex-1 bg-[url('/background2.png')] bg-cover bg-center flex flex-col 
-            ${activeUser && chatId?.id ? "block" : "hidden md:flex"}`}
+    return (
+        <aside
+            className={`h-full md:w-1/4 w-full py-2 border-r border-[color:var(--border)] bg-[color:var(--background)] 
+            ${activeUser && chatId?.id ? "hidden md:block" : "block"}`}
+            aria-label="Conversations sidebar"
         >
-            <header className="h-16 bg-[color:var(--background)] border-b border-[color:var(--border)] px-4 flex items-center">
-                <button
-                    onClick={() => {
-                        router.push("/main");
-                    }}
-                    className="mr-3 text-[color:var(--muted-foreground)] hover:text-[color:var(--accent)] md:hidden"
-                >
-                    ←
-                </button>
-
-                <div className="inline-flex items-center px-2 py-1 mt-1 mb-1 h-12 rounded-xl bg-[color:var(--background)] border border-[color:var(--border)]">
-                    <div
-                        className="w-9 h-9 rounded-md bg-[color:var(--muted)] grid place-items-center font-medium"
-                        aria-hidden="true"
-                        title={`${activeUser?.username ?? ""} avatar`}
-                    >
-                        {(activeUser?.username ?? "?").charAt(0).toUpperCase()}
-                    </div>
-                    <div className="ml-2 text-white/90">
-                        <div className="font-medium leading-none">
-                            {activeUser?.username ?? "—"}
-                        </div>
-                        <div className="text-xs mt-1 flex items-center gap-2 text-[color:var(--muted-foreground)]">
-                            {isAlive && rId === activeUser?.id ? (
-                                <>
-                                    <span className="h-2.5 w-2.5 rounded-full bg-green-500 animate-pulse" />
-                                    Online
-                                </>
-                            ) : (
-                                <span>
-                                    last seen{" "}
-                                    {activeUser ? formatLastSeen(activeUser.lastSeen) : ""}
-                                </span>
-                            )}
-                        </div>
-                    </div>
-                </div>
-            </header>
-
-            <div
-                className="flex-1 flex px-3 py-2 pt-10 h-[80vh]"
-                style={
-                    {
-                        ["--color-iconColor"]: "#B7B1E3",
-                        ["--color-back"]: "#212121",
-                        ["--color-sender"]: "rgba(33,33,33,0.75)",
-                        ["--color-reciever"]: "rgba(183,177,227,0.8)",
-                    } as React.CSSProperties
-                }
-            >
-                <div
-                    ref={scrollRef}
-                    className="w-full max-w-3xl mx-auto h-[100%] overflow-y-auto no-scrollbar p-3 flex flex-col-reverse gap-2"
-                >
-                    {activeMessages.map((m) => {
-                        const isOwn = m.senderId === data.user.id;
-                        return (
-                            <div
-                                key={m.id}
-                                className={`max-w-[60%] break-words px-3 py-2 rounded-xl text-sm ${isOwn
-                                        ? "self-end bg-[var(--color-iconColor)] text-[#212121]"
-                                        : "self-start bg-[var(--color-back)] text-[#B7B1E3]"
-                                    }`}
-                            >
-                                <div>{m.content}</div>
-                                <div
-                                    className={`${isOwn
-                                            ? "text-[var(--color-sender)]"
-                                            : "text-[var(--color-reciever)]"
-                                        } text-xs mt-1 flex justify-end`}
-                                >
-                                    {formatTime(m.createdAt)}
-                                </div>
-                            </div>
-                        );
-                    })}
+            <div className="flex justify-between items-center px-5 py-4">
+                <h2 className="text-sm font-medium text-[color:var(--muted-foreground)]">
+                    Chats
+                </h2>
+                <div className="text-xs text-[color:var(--muted-foreground)]">
+                    {list.length} chats
                 </div>
             </div>
 
-            <div className="w-full flex justify-center px-3 pb-[max(5rem,env(safe-area-inset-bottom))] mb-5">
-                <div
-                    className="w-full max-w-3xl rounded-xl border mb-8 border-[color:var(--border)] bg-[color:var(--background)] shadow-sm flex items-center gap-2 px-2"
-                    onKeyDown={(e) => {
-                        if (e.key === "Enter" && !e.shiftKey) {
-                            e.preventDefault();
-                            sendMessage();
-                            inputRef.current?.focus();
-                        }
-                    }}
-                >
-                    <input
-                        id="message-input"
-                        ref={inputRef}
-                        type="text"
-                        placeholder="Type your message..."
-                        className="flex-1 h-12 px-3 bg-transparent focus-visible:outline-none text-foreground placeholder:text-[color:var(--muted-foreground)]"
-                    />
+            <div className="px-4 pb-3">
+                <input
+                    id="chat-search"
+                    value={query}
+                    onChange={(e) => setQuery(e.target.value)}
+                    placeholder="Search"
+                    className="w-full h-10 rounded-full bg-[color:var(--muted)] text-foreground placeholder:text-[color:var(--muted-foreground)] px-3 text-sm outline-none ring-0 focus:outline-none"
+                    aria-label="Search chats"
+                />
+            </div>
+
+            <div className="overflow-y-auto h-[calc(100%-7.5rem)] px-3 pb-16">
+                <ul className="flex flex-col gap-2" role="list" aria-label="Chat users">
+                    {list.map((u: any) => {
+                        //                       const isActive = activeUser?.id === u.id;
+                        //                     const count = counterRef.current.get(u.id);
+                        //                     const previewText = preview.current ?? "No messages yet";
+                        return u.participants.map((p: any) => (
+                            <li key={u.id}>
+                                <button
+                                    type="button"
+                                    onClick={async () =>
+                                        await handleUserClick(p.user.id, p.chatId, p.user.username)
+                                    }
+                                    className={[
+                                        "group relative group overflow-hidden active:scale-[0.985] w-full text-left rounded-2xl px-2 py-2 flex items-center gap-3 transition-colors",
+                                        isAlive
+                                            ? "bg-[color:var(--accent)] text-[color:var(--accent-foreground)]"
+                                            : "hover:bg-[color:var(--muted)]",
+                                    ].join(" ")}
+                                >
+                                    <span className="absolute inset-0 flex items-center justify-center pointer-events-none">
+                                        <span className="pointer-events-none absolute left-1/2 top-1/2 -translate-x-1/2 -translate-y-1/2 h-0 w-0 rounded-full bg-white/20 opacity-0 blur-[80px] transition-all duration-500 ease-out group-active:h-500px group-active:w-500px group-active:opacity-100" />
+                                    </span>
+
+                                    <div className="relative z-10 w-10 h-10 rounded-full text-white bg-[color:var(--muted)] flex items-center justify-center text-sm font-medium">
+                                        {p.user.username.charAt(0).toUpperCase()}
+                                    </div>
+
+                                    <div className="relative z-10 min-w-0 flex-1">
+                                        <div className="flex items-center gap-2">
+                                            <span className="truncate font-medium">
+                                                {p.user.username.charAt(0).toUpperCase() +
+                                                    p.user.username.slice(1)}
+                                            </span>
+                                        </div>
+
+                                        <div className="text-xs text-[color:var(--muted-foreground)] truncate">
+                                            {u.message.length !== 0
+                                                ? u.message.map((m: any) => m.content)
+                                                : ""}
+                                        </div>
+                                    </div>
+                                </button>
+                            </li>
+                        ));
+                    })}
+                </ul>
+            </div>
+
+            <div className="absolute bottom-0 left-0 right-0 w-full md:w-[25%] border-t border-[color:var(--border)] bg-[color:var(--background)] p-3">
+                <div className="flex items-center justify-between gap-3">
+                    <div className="flex items-center gap-3">
+                        <div className="w-8 h-8 rounded-full bg-[color:var(--muted)] grid place-items-center text-xs">
+                            {data!.user.username[0]}
+                        </div>
+                        <div className="text-xs">
+                            <div className="font-medium truncate max-w-[100px] sm:max-w-[150px] md:max-w-none">
+                                {data!.user.username}
+                            </div>
+                            <div className="text-[color:var(--muted-foreground)]">
+                                Signed in
+                            </div>
+                        </div>
+                    </div>
+
                     <button
-                        type="button"
-                        onClick={sendMessage}
-                        className="p-2 transition-colors text-[color:var(--foreground)] hover:text-[color:var(--accent)]"
+                        onClick={() => signOut({ callbackUrl: "/api/auth/signin" })}
+                        className="flex text-white items-center justify-center hover:text-blue-500 transition-colors"
                     >
                         <svg
                             xmlns="http://www.w3.org/2000/svg"
@@ -381,18 +361,17 @@ export default function ChatMergedUI() {
                             viewBox="0 0 24 24"
                             fill="none"
                             stroke="currentColor"
-                            strokeWidth="1.6"
+                            strokeWidth="2"
                             strokeLinecap="round"
                             strokeLinejoin="round"
                         >
-                            <path d="M3.714 3.048a.498.498 0 0 0-.683.627l2.843 7.627a2 2 0 0 1 0 1.396l-2.842 7.627a.498.498 0 0 0 .682.627l18-8.5a.5.5 0 0 0 0-.904z" />
-                            <path d="M6 12h16" />
+                            <path d="m16 17 5-5-5-5" />
+                            <path d="M21 12H9" />
+                            <path d="M9 21H5a2 2 0 0 1-2-2V5a2 2 0 0 1 2-2h4" />
                         </svg>
                     </button>
                 </div>
             </div>
-        </main>
-    ) : (
-        <main className="hidden sm:flex h-full flex-1 bg-[url('/background2.png')] bg-cover bg-center flex-col" />
+        </aside>
     );
 }
