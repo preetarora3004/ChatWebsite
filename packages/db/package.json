@@ -1,0 +1,31 @@
+{
+    "name": "@workspace/db",
+    "module": "./src/client.ts",
+    "exports": {
+        ".": {
+            "types": "./lib/client.ts",
+            "default": "./lib/client.ts"
+        },
+        "./client": {
+            "types": "./generated/prisma/client.ts",
+            "default": "./generated/prisma/client.ts"
+        }
+    },
+    "type": "module",
+    "private": true,
+    "devDependencies": {
+        "@types/bun": "latest",
+        "@types/node": "^26.6.6",
+        "@types/pg": "^8.23.1",
+        "prisma": "^7.10.1"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "@prisma/adapter-pg": "^7.10.1",
+        "@prisma/client": "7",
+        "dotenv": "^18.0.9",
+        "pg": "^8.23.1"
+    }
+}

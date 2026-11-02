@@ -1,0 +1,26 @@
+{
+    "name": "@workspace/server",
+    "module": "index.ts",
+    "type": "module",
+    "private": true,
+    "devDependencies": {
+        "@types/bcrypt": "^6.0.0",
+        "@types/bun": "latest",
+        "@types/dotenv": "^8.2.3",
+        "@types/express": "^5.0.6"
+    },
+    "peerDependencies": {
+        "typescript": "^5"
+    },
+    "dependencies": {
+        "bcrypt": "^6.0.0",
+        "dotenv": "^18.0.9",
+        "express": "^5.3.0",
+        "zod": "^4.6.7",
+        "@workspace/db": "workspace:*",
+        "@workspace/contracts": "workspace:*",
+        "@workspace/ws-server": "workspace:*",
+        "@workspace/http": "workspace:*",
+        "@workspace/security": "workspace:*"
+    }
+}
