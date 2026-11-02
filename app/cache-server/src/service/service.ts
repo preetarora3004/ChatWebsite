@@ -1,8 +1,12 @@
+import type { SessionResult } from "@workspace/contracts";
 import type { Repository } from "../repository/repository";
-import type { ConnectionKey, Connections } from "../types/types";
+import type { ConnectionKey, Connections, SessionKey } from "@workspace/contracts";
 
-export class Service<T extends Connections = Connections> {
-    constructor(private readonly repository: Repository<T>) { }
+export class Service<
+    T extends Connections = Connections,
+    K extends SessionResult = SessionResult,
+> {
+    constructor(private readonly repository: Repository<T, K>) { }
 
     public storeCache(userId: ConnectionKey, connection: T): boolean {
         return this.repository.storeCache(userId, connection);
@@ -14,5 +18,25 @@ export class Service<T extends Connections = Connections> {
 
     public deleteCache(userId: ConnectionKey): boolean {
         return this.repository.removeCache(userId);
+    }
+
+    public storeSession(token: SessionKey, session: K) {
+        const sessionObj = this.repository.cacheSession(token, session);
+
+        return sessionObj;
+    }
+
+    public verifySession(token: SessionKey) : boolean {
+        const session = this.repository.getSession(token);
+
+        if (
+            (session && session.expiredAt <= new Date(Date.now())) ||
+            (session && !session.isActive) ||
+            !session
+        ) {
+            return false;
+        }
+
+        return true;
     }
 }

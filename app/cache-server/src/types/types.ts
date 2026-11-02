@@ -1,10 +1,8 @@
-import type { WebSocket } from "bun";
+import z from 'zod'
 
-export type Connections = {
-    isOnline: boolean;
-    ws: WebSocket;
-};
-
-export type ConnectionKey = string;
-
-export type CacheStore<T extends Connections> = Map<ConnectionKey, T>;
+export const registerSession = z.object({
+    token: z.string(),
+    hashToken: z.string(),
+    userId: z.string(),
+    expiredAt: z.date()
+})

@@ -7,7 +7,15 @@ export class AuthController {
     constructor(private readonly service: AuthService) { }
 
     public async verifySession(req: Request, res: Response) {
-        const token = req.cookies.sessionToken as string;
+        const token = req.headers.authorization?.split(" ")[1];
+
+        if (!token) {
+            throw new ApiError(
+                "Unauthorized access",
+                ErrorCode.UNAUTHORIZED.code,
+                ErrorCode.UNAUTHORIZED.statusCode,
+            );
+        }
 
         const isAuthenticated = await this.service.verifySession(token);
 

@@ -20,6 +20,9 @@
             ],
             "@workspace/http/*": [
                 "../packages/http/src/*"
+            ],
+            "@workspace/clients/*": [
+                "../packages/clients/src/*"
             ]
         },
         // Bundler mode

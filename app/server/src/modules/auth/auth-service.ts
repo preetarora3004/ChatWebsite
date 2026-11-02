@@ -13,9 +13,13 @@ import {
     loginSchema,
 } from "./auth-schema";
 import { ApiError, ErrorCode } from "@workspace/http";
+import type { CacheClient } from "@workspace/clients";
 
 export class AuthService {
-    constructor(private readonly repository: AuthRepository) { }
+    constructor(
+        private readonly repository: AuthRepository,
+        private readonly cacheClient: CacheClient,
+    ) { }
 
     private async createSession(
         userId: SessionUserId,
@@ -30,14 +34,24 @@ export class AuthService {
             expiredAt,
         );
 
-        //Cache Session-Id
+        const cacheSession = await this.cacheClient.storeSession({
+            userId: userId,
+            token: token,
+            hashToken: hashToken,
+            expiredAt: expiredAt,
+        });
 
-        return !sessionResult ? undefined : { ...sessionResult, token: token };
+        return !sessionResult ? undefined : cacheSession;
     }
 
     public async verifySession(token: string): Promise<boolean> {
         const hashToken = tokenHash(token) satisfies HashToken;
-        //Check from Cache
+
+        const valid = await this.cacheClient.verifySession(token);
+
+        if (valid) {
+            return true;
+        }
 
         const session = await this.repository.getSessionByHash(hashToken);
 
@@ -114,5 +128,5 @@ export class AuthService {
         return session;
     }
 
-    private exponentialRetry() { }
+    private async exponentialRetry() { }
 }

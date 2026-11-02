@@ -28,6 +28,13 @@
     },
     "app/cache-server": {
       "name": "@workspace/cache-server",
+      "dependencies": {
+        "@workspace/contracts": "workspace:*",
+        "@workspace/db": "workspace:*",
+        "@workspace/http": "workspace:*",
+        "@workspace/security": "workspace:*",
+        "@workspace/ws-server": "workspace:*",
+      },
       "devDependencies": {
         "@types/bun": "latest",
       },
@@ -38,6 +45,7 @@
     "app/server": {
       "name": "@workspace/server",
       "dependencies": {
+        "@workspace/clients": "workspace:*",
         "@workspace/contracts": "workspace:*",
         "@workspace/db": "workspace:*",
         "@workspace/http": "workspace:*",
@@ -98,6 +106,8 @@
         "@types/bun": "latest",
       },
       "peerDependencies": {
+        "@workspace/contracts": "workspace:*",
+        "@workspace/http": "workspace:*",
         "typescript": "^5",
       },
     },
