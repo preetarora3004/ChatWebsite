@@ -1,4 +1,4 @@
-import type { PrismaClient } from "@workspace/db/generated/prisma/client";
+import type { PrismaClient } from "@workspace/db/client";
 
 export class UserRepository {
     constructor(private readonly prisma: PrismaClient) { }

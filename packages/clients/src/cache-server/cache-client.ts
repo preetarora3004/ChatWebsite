@@ -4,6 +4,9 @@ import type {
     SessionKey,
     SessionRegister,
     SessionVerifyResponse,
+    ConnectionKey,
+    Connections,
+    SocketCacheResponse,
 } from "@workspace/contracts";
 import { ApiError, ErrorCode } from "@workspace/http";
 
@@ -11,6 +14,28 @@ export class CacheClient {
     constructor(
         private readonly baseUrl: String = "http://localhost:4000/api/v1/cache",
     ) { }
+
+    public async cacheUserSocket(userId: ConnectionKey, connection: Connections) {
+        const res = await fetch(`${this.baseUrl}/cache-user/${userId}`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(connection),
+        });
+
+        if (!res.ok) {
+            throw new ApiError(
+                "Internal server error",
+                ErrorCode.INTERNAL_SERVER_ERROR.code,
+                ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
+            );
+        }
+
+        const data = (await res.json()) as SocketCacheResponse;
+
+        return data;
+    }
 
     public async storeSession(session: SessionRegister) {
         const res = await fetch(`${this.baseUrl}/session-user`, {
@@ -54,6 +79,6 @@ export class CacheClient {
 
         const data = (await res.json()) as SessionVerifyResponse;
 
-        return data.success;
+        return data.userId;
     }
 }

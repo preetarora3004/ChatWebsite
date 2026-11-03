@@ -21,3 +21,15 @@ export type WebSocketEventMap = {
     };
 };
 
+export interface AuthenticatedWebSocket extends WebSocket {
+    id: string;
+}
+
+export interface ServerAuthenticatedWebSocket extends WebSocket {
+    serverId: string;
+}
+
+export interface IdentitySocket extends WebSocket {
+    userId?: string;
+    serverId?: string;
+}

@@ -9,9 +9,11 @@
     },
     "type": "module",
     "devDependencies": {
-        "@types/bun": "latest"
+        "@types/bun": "latest",
+        "@types/ws": "^8.18.2"
     },
     "peerDependencies": {
-        "typescript": "^5"
+        "typescript": "^5",
+        "ws": "^8.22.0"
     }
 }

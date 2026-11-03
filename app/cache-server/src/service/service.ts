@@ -1,6 +1,11 @@
 import type { SessionResult } from "@workspace/contracts";
 import type { Repository } from "../repository/repository";
-import type { ConnectionKey, Connections, SessionKey } from "@workspace/contracts";
+import type {
+    ConnectionKey,
+    Connections,
+    SessionKey,
+} from "@workspace/contracts";
+import { sessionToken } from "@workspace/security";
 
 export class Service<
     T extends Connections = Connections,
@@ -26,7 +31,7 @@ export class Service<
         return sessionObj;
     }
 
-    public verifySession(token: SessionKey) : boolean {
+    public verifySession(token: SessionKey): string | null {
         const session = this.repository.getSession(token);
 
         if (
@@ -34,9 +39,9 @@ export class Service<
             (session && !session.isActive) ||
             !session
         ) {
-            return false;
+            return null;
         }
 
-        return true;
+        return session.userId;
     }
 }

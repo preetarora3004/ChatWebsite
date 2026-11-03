@@ -1,7 +1,5 @@
 import type { SessionResult } from "@workspace/contracts";
-
-//Fix
-import type { WebSocket } from "bun";
+import { type WebSocket } from "ws";
 
 export type Connections = {
     isOnline: boolean;
@@ -22,3 +20,12 @@ export type SessionRegister = {
     hashToken: string;
     expiredAt: Date;
 };
+
+export type ServerStore = {
+    isOnline: boolean;
+    ws: WebSocket;
+};
+
+export type ServerKey = string;
+
+export type ServerMap<J extends ServerStore> = Map<ServerKey, J>;

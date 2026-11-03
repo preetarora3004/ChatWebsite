@@ -29,7 +29,6 @@ export class AuthController {
 
         return res.status(SuccessCode.OK.statusCode).json({
             success: true,
-            body: SuccessCode.OK.code,
         });
     }
 

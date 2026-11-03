@@ -44,13 +44,13 @@ export class AuthService {
         return !sessionResult ? undefined : cacheSession;
     }
 
-    public async verifySession(token: string): Promise<boolean> {
+    public async verifySession(token: string): Promise<string | null> {
         const hashToken = tokenHash(token) satisfies HashToken;
 
         const valid = await this.cacheClient.verifySession(token);
 
         if (valid) {
-            return true;
+            return valid
         }
 
         const session = await this.repository.getSessionByHash(hashToken);
@@ -58,8 +58,8 @@ export class AuthService {
         return !session ||
             session.expiredAt <= new Date(Date.now()) ||
             !session.isActive
-            ? false
-            : true;
+            ? null
+            : session.userId;
     }
 
     public async createAccount(data: RegisterInput) {

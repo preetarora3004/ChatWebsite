@@ -3,7 +3,7 @@ import { Router } from "express";
 
 const router = Router();
 
-router.post("/cache-user", controller.storeCache.bind(controller));
+router.post("/cache-user/:userId", controller.storeCache.bind(controller));
 router.get("/cache-user", controller.getCache.bind(controller));
 router.delete("/cache-user", controller.deleteCache.bind(controller));
 

@@ -1,6 +1,4 @@
-import type {
-    CreateSessionResult,
-} from "../auth/session-result";
+import type { CreateSessionResult } from "../auth/session-result";
 
 export type SessionStoreResponse = {
     success: true;
@@ -8,5 +6,11 @@ export type SessionStoreResponse = {
 };
 
 export type SessionVerifyResponse = {
-    success: boolean
-}
+    success: boolean;
+    userId: string | null
+};
+
+export type SocketCacheResponse = {
+    success: true;
+    userId: string | null
+};

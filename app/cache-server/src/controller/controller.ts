@@ -59,10 +59,12 @@ export class Controller {
 
         return valid
             ? res.status(SuccessCode.ACCEPTED.statusCode).json({
-                success: valid,
+                success: true,
+                userId: valid
             })
             : res.status(ErrorCode.UNAUTHORIZED.statusCode).json({
-                success: valid,
+                success: false,
+                userId: null
             });
     }
 }

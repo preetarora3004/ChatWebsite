@@ -1,0 +1,44 @@
+export type ServerSideEvents = {
+    "authenticate-request": {
+        chatId: string;
+        content: string;
+    };
+
+    "message-service": {
+        userId: string;
+        chatId: string;
+        content: string;
+    };
+
+    "message-client": {
+        userId: string;
+        chatId: string;
+        recieverId: { userId: string }[] | null;
+        content: string;
+    };
+
+    message: {
+        senderId: string;
+        chatId: string;
+        content: string;
+    };
+
+    "invalid-message": {
+        senderId: string;
+        error: string;
+    };
+};
+
+export type ServerEventNames = keyof ServerSideEvents;
+
+// export type MessageServer<K extends keyof ServerSideEvents> = {
+//     event: K;
+//     payload: ServerSideEvents[K];
+// };
+//
+export type MessageServer = {
+    [K in keyof ServerSideEvents]: {
+        event: K;
+        payload: ServerSideEvents[K];
+    };
+}[keyof ServerSideEvents];

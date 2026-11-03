@@ -1,58 +1,97 @@
-import { type WebSocket, WebSocketServer } from "ws";
+import { WebSocketServer } from "ws";
 import { type IncomingMessage, createServer } from "http";
-import { userMap } from "./repository/repository";
+import { userMap, serverMap } from "./repository/repository";
+import type { AuthenticatedWebSocket } from "./types/types";
 import "dotenv/config";
-import { notify, returnParams } from "./utility/utility";
+import { handleMessage, notify, returnParams } from "./utility/utility";
+import { authClient } from "./dependency/dependency";
+import { getCookie } from "./utility/utility";
 
 const PORT = process.env.PORT ?? 8080;
 const server = createServer();
 const wss = new WebSocketServer({ noServer: true });
 
-server.on("upgrade", (req, socket, head) => {
-    wss.handleUpgrade(req, socket, head, (ws: WebSocket) => {
-        ws.emit("connection", ws, req);
-    });
-});
+server.on("upgrade", async (req, socket, head) => {
+    try {
+        const [serverId] = returnParams(
+            req.url!,
+            `http://${req.headers.host}`,
+            "serverId",
+        );
 
-wss.on("connection", (ws: WebSocket, req: IncomingMessage) => {
-    const idArray = returnParams(
-        req.url!,
-        `http://${req.headers.host}`,
-        "userId",
-    );
+        if (!serverId) {
+            const sessionToken = getCookie(req.headers.cookie, "sessionToken");
 
-    const [userId] = idArray;
-
-    if (!userId) {
-        throw Error("Invalid connection");
-    }
-
-    userMap.set(userId, { ws: ws, isOnline: true });
-
-    ws.on("pong", () => {
-        let user = userMap.get(userId);
-
-        if (!user) {
-            userMap.set(userId, { ws, isOnline: true });
-            user = userMap.get(userId);
-        }
-
-        user!.isOnline = true;
-        notify("presence", { userId: userId, isOnline: user!.isOnline });
-    });
-
-    setTimeout(() => {
-        userMap.forEach((u, key) => {
-            if (!u.isOnline) {
-                u.ws.terminate();
-                userMap.delete(key);
+            if (!sessionToken) {
+                socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+                socket.destroy();
+                return;
             }
 
-            u.isOnline = false;
-            u.ws.send("ping");
-        });
-    }, 15000);
+            const userId = await authClient.verifySession(sessionToken);
+
+            if (!userId) {
+                socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+                socket.destroy();
+                return;
+            }
+
+            wss.handleUpgrade(req, socket, head, (ws) => {
+                const authenticatedWs = ws as AuthenticatedWebSocket;
+                authenticatedWs.id = userId;
+
+                userMap.set(userId, { ws: authenticatedWs, isOnline: true });
+                wss.emit("connection", authenticatedWs, req);
+            });
+        } else {
+            wss.handleUpgrade(req, socket, head, (ws) => {
+                const serverAuthenticatedWs = ws as AuthenticatedWebSocket;
+                serverAuthenticatedWs.id = serverId;
+
+                serverMap.set(serverId, { ws: serverAuthenticatedWs, isOnline: true });
+                wss.emit("connection", ws, req);
+            });
+        }
+    } catch {
+        socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
+        socket.destroy();
+    }
 });
+
+wss.on(
+    "connection",
+    async (ws: AuthenticatedWebSocket, req: IncomingMessage) => {
+        ws.on("message", (data: string) => {
+            const msg = JSON.parse(data);
+            handleMessage(msg, ws);
+        });
+
+        ws.on("pong", () => {
+            let user = userMap.get(ws.id);
+
+            if (!user) {
+                userMap.set(ws.id, { ws, isOnline: true });
+                user = userMap.get(ws.id);
+            }
+
+            user!.isOnline = true;
+        });
+
+        //Change presence simulator according to the token
+        setInterval(() => {
+            userMap.forEach((u, key) => {
+                if (!u.isOnline) {
+                    u.ws.terminate();
+                    userMap.delete(key);
+                    notify("presence", { userId: key, isOnline: u.isOnline });
+                }
+
+                u.isOnline = false;
+                u.ws.send("ping");
+            });
+        }, 15000);
+    },
+);
 
 try {
     server.listen(PORT, () => {

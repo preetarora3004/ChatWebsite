@@ -5,8 +5,12 @@
     "target": "ESNext",
     "module": "Preserve",
     "moduleDetection": "force",
-    "jsx": "react-jsx",
     "allowJs": true,
+    "paths": {
+        "@workspace/clients/*": ["../../packages/clients/src/*"],
+        "@workspace/contracts/*": ["../../packages/contracts/src/*"],
+        "@workspace/http/*": ["../../packages/http/src/*"]
+    },
 
     // Bundler mode
     "moduleResolution": "bundler",
