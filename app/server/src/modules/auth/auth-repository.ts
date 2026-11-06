@@ -4,6 +4,7 @@ import type {
     HashToken,
     SessionUserId,
     ExpiredAt,
+    CreateSessionResult,
 } from "@workspace/contracts";
 import type { RegisterInput } from "./auth-schema";
 
@@ -11,17 +12,22 @@ export class AuthRepository {
     constructor(private readonly prisma: PrismaClient) { }
 
     public async createSession(
+        token: string,
         userId: SessionUserId,
         tokenHash: HashToken,
         expiresAt: ExpiredAt,
-    ): Promise<SessionResult | undefined> {
+    ): Promise<CreateSessionResult | undefined> {
+        console.log(userId);
+        console.log("7");
         return this.prisma.session.create({
             data: {
+                token: token,
                 userId: userId,
                 hashToken: tokenHash,
                 expiredAt: expiresAt,
             },
             select: {
+                token: true,
                 userId: true,
                 hashToken: true,
                 isActive: true,
@@ -32,7 +38,8 @@ export class AuthRepository {
 
     public async getSessionByHash(
         hashToken: HashToken,
-    ): Promise<SessionResult | null> {
+    ): Promise<CreateSessionResult | null> {
+        console.log("database");
         return this.prisma.session.findFirst({
             where: {
                 AND: [
@@ -46,6 +53,7 @@ export class AuthRepository {
                 ],
             },
             select: {
+                token: true,
                 userId: true,
                 hashToken: true,
                 isActive: true,
@@ -56,8 +64,8 @@ export class AuthRepository {
 
     public async getActiveSession(
         userId: SessionUserId,
-    ): Promise<SessionResult[]> {
-        return this.prisma.session.findMany({
+    ): Promise<CreateSessionResult | null> {
+        return this.prisma.session.findFirst({
             where: {
                 AND: [
                     {
@@ -68,6 +76,7 @@ export class AuthRepository {
                 ],
             },
             select: {
+                token: true,
                 userId: true,
                 hashToken: true,
                 isActive: true,
@@ -90,14 +99,15 @@ export class AuthRepository {
     }
 
     public async login(username: string) {
+        console.log("4");
         return this.prisma.user.findUnique({
             where: {
-                username: username
+                username: username,
             },
             select: {
                 id: true,
-                password: true
-            }
+                password: true,
+            },
         });
     }
 }

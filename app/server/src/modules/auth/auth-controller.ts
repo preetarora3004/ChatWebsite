@@ -9,6 +9,8 @@ export class AuthController {
     public async verifySession(req: Request, res: Response) {
         const token = req.headers.authorization?.split(" ")[1];
 
+        console.log(token);
+
         if (!token) {
             throw new ApiError(
                 "Unauthorized access",
@@ -16,6 +18,8 @@ export class AuthController {
                 ErrorCode.UNAUTHORIZED.statusCode,
             );
         }
+
+        console.log("enter");
 
         const isAuthenticated = await this.service.verifySession(token);
 
@@ -27,8 +31,11 @@ export class AuthController {
             );
         }
 
+        console.log("auth passed");
+
         return res.status(SuccessCode.OK.statusCode).json({
             success: true,
+            userId: isAuthenticated,
         });
     }
 
@@ -49,7 +56,7 @@ export class AuthController {
             );
         }
 
-        res.cookie("sesssionToken", token.token, {
+        res.cookie("sessionToken", token.token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
@@ -65,10 +72,16 @@ export class AuthController {
     public async login(req: Request, res: Response) {
         const { username, password } = req.body;
 
+        console.log("1");
+
         const token = await this.service.login({
             username: username,
             password: password,
         });
+
+        console.log("15");
+
+        console.log(token);
 
         if (!token || !(token satisfies SessionResult)) {
             throw new ApiError(
@@ -78,12 +91,31 @@ export class AuthController {
             );
         }
 
-        res.cookie("sesssionToken", token.token, {
+        console.log("16");
+        // console.log(token.expiredAt);
+        // try {
+        //     res.cookie("sessionToken", token.token, {
+        //         httpOnly: true,
+        //         secure: process.env.NODE_ENV === "production",
+        //         sameSite: "lax",
+        //         expires: new Date(String(token.expiredAt)),
+        //         path: "/",
+        //     });
+        //
+        //     console.log("17");
+        // } catch (error) {
+        //     console.error("Cookie serialization failed:", error);
+        // }
+
+        res.cookie("sessionToken", token.token, {
             httpOnly: true,
             secure: process.env.NODE_ENV === "production",
             sameSite: "lax",
-            expires: token.expiredAt,
+            expires: new Date(String(token.expiredAt)),
+            path: "/",
         });
+
+        console.log("17");
 
         return res.status(SuccessCode.OK.statusCode).json({
             success: true,

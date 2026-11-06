@@ -24,22 +24,37 @@ export class AuthService {
     private async createSession(
         userId: SessionUserId,
     ): Promise<CreateSessionResult | undefined> {
+        console.log("7");
+
+        const activeSession = await this.repository.getActiveSession(userId);
+
+        if (activeSession) {
+            return activeSession;
+        }
+
         const token = sessionToken;
         const hashToken = tokenHash(token);
         const expiredAt = new Date(Date.now() + 7 * 24 * 60 * 1000);
 
         const sessionResult = await this.repository.createSession(
+            token,
             userId,
             hashToken,
             expiredAt,
         );
 
+        console.log(activeSession);
+
+        console.log("9");
+
         const cacheSession = await this.cacheClient.storeSession({
             userId: userId,
-            token: token,
-            hashToken: hashToken,
-            expiredAt: expiredAt,
+            token: sessionResult!.token,
+            hashToken: sessionResult!.hashToken,
+            expiredAt: sessionResult!.expiredAt,
         });
+
+        console.log("13");
 
         return !sessionResult ? undefined : cacheSession;
     }
@@ -47,19 +62,36 @@ export class AuthService {
     public async verifySession(token: string): Promise<string | null> {
         const hashToken = tokenHash(token) satisfies HashToken;
 
+        console.log("hashed");
+        console.log(hashToken);
+
         const valid = await this.cacheClient.verifySession(token);
 
+        console.log(valid);
+
         if (valid) {
-            return valid
+            return valid;
         }
 
-        const session = await this.repository.getSessionByHash(hashToken);
+        const session = await this.repository.getSessionByHash(token);
+
+        if (
+            !session ||
+            session.expiredAt <= new Date(Date.now()) ||
+            !session.isActive
+        ) {
+            return null;
+        }
+
+        const cache = await this.cacheClient.storeSession(session); //include token
+
+        console.log(session);
 
         return !session ||
             session.expiredAt <= new Date(Date.now()) ||
             !session.isActive
             ? null
-            : session.userId;
+            : session.userId; // change return
     }
 
     public async createAccount(data: RegisterInput) {
@@ -93,6 +125,8 @@ export class AuthService {
     }
 
     public async login(data: LoginInput) {
+        console.log("2");
+
         const parsed = loginSchema.safeParse(data);
 
         if (!parsed.success) {
@@ -102,6 +136,8 @@ export class AuthService {
                 ErrorCode.VALIDATION_ERROR.statusCode,
             );
         }
+
+        console.log("3");
 
         const user = await this.repository.login(data.username);
 
@@ -113,7 +149,17 @@ export class AuthService {
             );
         }
 
+        console.log("5");
+
         const hashedPassword = await bcrypt.compare(data.password, user.password);
+
+        console.log({
+            hashedPassword,
+            storedHashLength: user.password.length,
+            storedHashPrefix: user.password.slice(0, 7),
+        });
+
+        console.log("6");
 
         if (!hashedPassword) {
             throw new ApiError(
@@ -124,6 +170,8 @@ export class AuthService {
         }
 
         const session = await this.createSession(user.id);
+
+        console.log("14");
 
         return session;
     }

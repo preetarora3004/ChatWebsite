@@ -1,6 +1,7 @@
 import express from "express";
 import { ErrorMiddleware } from "@workspace/http";
 import cookieParser from "cookie-parser";
+import "./modules/websocket/websocket.client"
 import "dotenv/config";
 import cors from "cors";
 import AuthRoutes from "./modules/auth/auth-routes";
@@ -17,7 +18,7 @@ app.use(
     express.json(),
 );
 
-app.use("api/v1/auth", AuthRoutes);
+app.use("/api/v1/auth", AuthRoutes);
 app.use(ErrorMiddleware);
 
 try {

@@ -1,4 +1,5 @@
 {
+    "extends": "../../tsconfig.json",
     "compilerOptions": {
         "lib": [
             "ESNext"
@@ -39,6 +40,10 @@
         // Some stricter flags (disabled by default)
         "noUnusedLocals": false,
         "noUnusedParameters": false,
-        "noPropertyAccessFromIndexSignature": false
+        "noPropertyAccessFromIndexSignature": false,
+        "typeRoots": [
+            "./src/modules/types/*",
+            "./node_modules/@types/*"
+        ]
     }
 }

@@ -1,26 +1,56 @@
-import type { CreateSessionResult, SessionResult } from "@workspace/contracts";
 import {
     type Connections,
     type CacheStore,
     type ConnectionKey,
     type SessionStore,
     type SessionKey,
+    type ChatParticipants,
+    type PartitipantKey,
+    type ParticipantMap,
+    type CreateSessionResult,
+    type ParticipantCache,
+    type SessionResult,
 } from "@workspace/contracts";
 
 export class Repository<
     T extends Connections = Connections,
     K extends SessionResult = SessionResult,
+    I extends ParticipantCache = ParticipantCache,
 > {
     private readonly cacheMap: CacheStore<T>;
     private readonly sessionMap: SessionStore<K>;
+    private readonly participantMap: ParticipantMap<I>;
 
     constructor() {
         this.cacheMap = new Map<ConnectionKey, T>();
         this.sessionMap = new Map<SessionKey, K>();
+        this.participantMap = new Map<PartitipantKey, I>();
+    }
+
+    public cacheParticipants(chatId: string, participantCache: I) {
+        let cache = this.participantMap.get(chatId);
+
+        if (
+            cache &&
+            cache.participants.length > 0 &&
+            cache.lastFetch < new Date(Date.now()) // check for validation
+        ) {
+            return true;
+        }
+
+        this.participantMap.set(chatId, participantCache);
+
+        return true;
+    }
+
+    public getChatParticipant(chatId: string): I | undefined {
+        return this.participantMap.get(chatId);
     }
 
     public cacheSession(token: SessionKey, session: K): CreateSessionResult {
         let sessionObj = this.sessionMap.get(token);
+
+        console.log("16");
 
         if (
             sessionObj &&
@@ -30,7 +60,11 @@ export class Repository<
             return { ...session, token: token };
         }
 
+        console.log("17");
+
         this.sessionMap.set(token, session);
+
+        console.log("18");
 
         return { ...session, token: token };
     }

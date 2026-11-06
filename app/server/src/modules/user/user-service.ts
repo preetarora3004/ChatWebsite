@@ -1,9 +1,10 @@
-import { UserRepository } from "../user-repository/user-repository";
+import { UserRepository } from "./user-repository";
 
 export class UserService {
     constructor(private readonly repository: UserRepository) { }
 
-    public async messageHandling() {
+    public async getDashboard(userId: string) {
         
     }
+
 }

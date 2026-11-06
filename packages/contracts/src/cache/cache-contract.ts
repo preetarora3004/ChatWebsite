@@ -29,3 +29,17 @@ export type ServerStore = {
 export type ServerKey = string;
 
 export type ServerMap<J extends ServerStore> = Map<ServerKey, J>;
+
+export type ChatParticipants = {
+    participantsId: string;
+};
+
+export type ParticipantCache = {
+    participants: ChatParticipants[];
+    lastFetch: Date;
+};
+
+
+export type PartitipantKey = ChatParticipants["participantsId"];
+
+export type ParticipantMap<I extends ParticipantCache> = Map<PartitipantKey, I>;
