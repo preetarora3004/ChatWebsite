@@ -11,7 +11,7 @@ router.post("/session-user", controller.cacheSession.bind(controller));
 router.get("/session-user/:token", controller.verifySession.bind(controller));
 
 router.post(
-    "/participants-cache/:chatId",
+    "/participants-cache",
     controller.cacheParticipant.bind(controller),
 );
 router.get("/participant-cache/:chatId", controller.getParticipants.bind(controller));

@@ -1,6 +1,6 @@
-import { Repository } from "../repository/repository";
-import { Service } from "../service/service";
-import { Controller } from "../controller/controller";
+import { Repository } from "./repository";
+import { Service } from "./service";
+import { Controller } from "./controller";
 
 const repository = new Repository();
 const service = new Service(repository);

@@ -1,17 +1,16 @@
 import type { Service } from "./service";
 import type { Response, Request } from "express";
 import { ApiError, ErrorCode, SuccessCode } from "@workspace/http";
-import type { PartitipantKey, SessionKey } from "@workspace/contracts";
+import type { ChatMemberCacheRequest, PartitipantKey, SessionKey } from "@workspace/contracts";
 import type { ConnectionKey, Connections } from "@workspace/contracts";
 
 export class Controller {
     constructor(private readonly service: Service) { }
 
     public cacheParticipant(req: Request, res: Response) {
-        const chatId = req.params.chatId as PartitipantKey;
-        const participants = req.body as { userId: string }[];
+        const participants = req.body as ChatMemberCacheRequest;
 
-        if (!chatId || participants.length < 0) {
+        if (participants.length < 0) {
             throw new ApiError(
                 "Invalid input",
                 ErrorCode.VALIDATION_ERROR.code,
@@ -19,7 +18,7 @@ export class Controller {
             );
         }
 
-        const result = this.service.cacheParticipants(chatId, participants);
+        const result = this.service.cacheParticipants(participants);
 
         return res.status(result ? 201 : 500).json({
             success: result,

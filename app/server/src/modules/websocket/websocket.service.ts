@@ -1,6 +1,7 @@
 import type { MessageServer, ServerSideEvents } from "@workspace/contracts";
 import { messageService } from "../dependency/dependency";
 import type WebSocket from "ws";
+import { chatService } from "../chat/chat.dependency";
 
 export async function handleMessage(message: MessageServer, ws: WebSocket) {
     switch (message.event) {
@@ -20,6 +21,23 @@ export async function handleMessage(message: MessageServer, ws: WebSocket) {
                         chatId: message.payload.chatId,
                         recieverId: members,
                     } satisfies ServerSideEvents["message-client"],
+                }),
+            );
+
+            return;
+
+        case "presence-service":
+            const cache = await chatService.checkCacheParticipants(
+                message.payload.chatId,
+            );
+
+            ws.send(
+                JSON.stringify({
+                    event: "presence-client",
+                    payload: {
+                        chatId: message.payload.chatId,
+                        chatMembers: cache,
+                    },
                 }),
             );
 

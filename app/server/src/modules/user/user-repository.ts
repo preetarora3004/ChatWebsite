@@ -27,6 +27,8 @@ export class UserRepository {
                                     },
                                     select: {
                                         id: true,
+                                        senderId: true,
+                                        chatId: true,
                                         content: true,
                                     },
                                 },
@@ -47,6 +49,8 @@ export class UserRepository {
                 },
             },
         });
+
+        return dashboard;
     }
 
     public async createMessage() { }

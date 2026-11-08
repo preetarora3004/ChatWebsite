@@ -7,10 +7,14 @@ export type SessionStoreResponse = {
 
 export type SessionVerifyResponse = {
     success: boolean;
-    userId: string | null
+    userId: string | null;
 };
 
 export type SocketCacheResponse = {
     success: true;
-    userId: string | null
+    userId: string | null;
+};
+
+export type ParticipantCacheResponse = {
+    success: true;
 };

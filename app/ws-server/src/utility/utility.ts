@@ -1,6 +1,10 @@
 import { serverMap, userMap } from "../repository/repository";
 import type { AuthenticatedWebSocket, WebSocketEventMap } from "../types/types";
-import type { MessageServer, ServerSideEvents } from "@workspace/contracts";
+import type {
+    MessageServer,
+    ParticipantCache,
+    ServerSideEvents,
+} from "@workspace/contracts";
 export function returnParams<const K extends readonly string[]>(
     url: string,
     base: string,
@@ -76,13 +80,47 @@ export function sendMessage(
     return;
 }
 
+export function notifyPresence(chatId: string, participants: ParticipantCache) {
+    // Otpmised for 1 on 1 conversation
+    // Can I do when 1 participant fetches the isOnline, whoever is online gets updated with it
+    // Check for stale
+
+    let activeUsers: Array<{ participantId: string }> = new Array();
+
+    participants.participants.forEach((idx) => {
+        let user = userMap.get(idx.userId);
+
+        if (user && user.isOnline) {
+            activeUsers.push({ participantId: idx.userId });
+        }
+    });
+
+    participants.participants.forEach((idx) => {
+        let user = userMap.get(idx.userId);
+
+        if (user && user.isOnline) {
+            user.ws.send(
+                JSON.stringify({
+                    event: "presence",
+                    payload: {
+                        chatId: chatId,
+                        activeUsers: activeUsers,
+                    } as ServerSideEvents["presence"],
+                }),
+            );
+        }
+    });
+
+    return true;
+}
+
 export async function handleMessage<K extends MessageServer>(
     data: K,
     ws: AuthenticatedWebSocket,
 ) {
     switch (data.event) {
         case "authenticate-request":
-            const serverSocket = getServerSocket();
+            let serverSocket = getServerSocket();
 
             if (!serverSocket) {
                 return false;
@@ -111,5 +149,34 @@ export async function handleMessage<K extends MessageServer>(
                 data.payload.recieverId,
             );
             return;
+
+        case "presence-service":
+            if (!data.payload.chatId) {
+                return;
+            }
+
+            serverSocket = getServerSocket();
+
+            if (!serverSocket) {
+                return false;
+            }
+
+            serverSocket.send(
+                JSON.stringify({
+                    event: "message-service",
+                    payload: {
+                        chatId: data.payload.chatId,
+                    },
+                }),
+            );
+
+            return true;
+
+        case "presence-client":
+            if (!data.payload.chatId || !data.payload.chatMembers) {
+                return;
+            }
+
+            return notifyPresence(data.payload.chatId, data.payload.chatMembers);
     }
 }

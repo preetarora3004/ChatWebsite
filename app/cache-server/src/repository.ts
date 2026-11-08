@@ -10,6 +10,7 @@ import {
     type CreateSessionResult,
     type ParticipantCache,
     type SessionResult,
+    type ParticipantChatId,
 } from "@workspace/contracts";
 
 export class Repository<
@@ -27,18 +28,17 @@ export class Repository<
         this.participantMap = new Map<PartitipantKey, I>();
     }
 
-    public cacheParticipants(chatId: string, participantCache: I) {
-        let cache = this.participantMap.get(chatId);
+    public cacheParticipants(participantCache: ParticipantChatId[]) {
+        participantCache.forEach((idx) => {
+            const cache = this.participantMap.get(idx.chatId);
 
-        if (
-            cache &&
-            cache.participants.length > 0 &&
-            cache.lastFetch < new Date(Date.now()) // check for validation
-        ) {
-            return true;
-        }
-
-        this.participantMap.set(chatId, participantCache);
+            if (!cache) {
+                this.participantMap.set(idx.chatId, {
+                    participants: idx.participants,
+                    lastFetch: idx.lastFetch,
+                } as I);
+            }
+        });
 
         return true;
     }

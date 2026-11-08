@@ -1,3 +1,5 @@
+import type { ParticipantCache } from "../cache/cache-contract";
+
 export type ServerSideEvents = {
     "authenticate-request": {
         chatId: string;
@@ -21,6 +23,20 @@ export type ServerSideEvents = {
         senderId: string;
         chatId: string;
         content: string;
+    };
+
+    "presence-service": {
+        chatId: string;
+    };
+
+    "presence-client": {
+        chatId: string;
+        chatMembers: ParticipantCache;
+    };
+
+    presence: {
+        chatId: string;
+        activeUsers: { participantId: string }[];
     };
 
     "invalid-message": {

@@ -35,11 +35,29 @@ export type ChatParticipants = {
 };
 
 export type ParticipantCache = {
-    participants: ChatParticipants[];
+    participants: { userId: string; username: string }[];
     lastFetch: Date;
 };
 
+export type ParticipantChatId = {
+    chatId: string;
+    participants: { userId: string; username: string }[];
+    lastFetch: Date;
+};
 
 export type PartitipantKey = ChatParticipants["participantsId"];
 
 export type ParticipantMap<I extends ParticipantCache> = Map<PartitipantKey, I>;
+
+export type ChatMembers = {
+    id: string;
+    user: {
+        id: string;
+        username: string;
+    };
+};
+
+export type ChatId = string;
+
+export type ChatMemberCacheRequest<L extends ChatMembers = ChatMembers> =
+    Array<{ chatId: ChatId; participants: L[] }>;

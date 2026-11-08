@@ -1,4 +1,4 @@
-import type { SessionResult } from "@workspace/contracts";
+import type { ChatMemberCacheRequest, SessionResult } from "@workspace/contracts";
 import type { Repository } from "./repository";
 import type {
     ConnectionKey,
@@ -14,17 +14,15 @@ export class Service<
     constructor(private readonly repository: Repository<T, K>) { }
 
     public cacheParticipants(
-        chatId: string,
-        participantIds: { userId: string }[],
+        participants: ChatMemberCacheRequest,
     ) {
         const cacheParticipants = new ParticipantCacheFormat(
-            participantIds,
+            participants,
             new Date(Date.now() + 2 * 24 * 60 * 60 * 1000),
         );
 
         const isCached = this.repository.cacheParticipants(
-            chatId,
-            cacheParticipants,
+            cacheParticipants.participants,
         );
 
         if (!isCached) {

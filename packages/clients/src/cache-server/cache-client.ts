@@ -1,5 +1,4 @@
 import type {
-    CreateSessionResult,
     SessionStoreResponse,
     SessionKey,
     SessionRegister,
@@ -7,6 +6,9 @@ import type {
     ConnectionKey,
     Connections,
     SocketCacheResponse,
+    ChatMemberCacheRequest,
+    ParticipantCacheResponse,
+    ParticipantCache,
 } from "@workspace/contracts";
 import { ApiError, ErrorCode } from "@workspace/http";
 
@@ -14,6 +16,38 @@ export class CacheClient {
     constructor(
         private readonly baseUrl: String = "http://localhost:4000/api/v1/cache",
     ) { }
+
+    public async cacheParticipant(chatParticipants: ChatMemberCacheRequest) {
+        const res = await fetch(`${this.baseUrl}/participants-cache`, {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json",
+            },
+            body: JSON.stringify(chatParticipants),
+        });
+
+        if (!res.ok) {
+            return false;
+        }
+
+        const data = (await res.json()) as ParticipantCacheResponse;
+
+        return data.success ? true : false;
+    }
+
+    public async getChatParticipant(chatId: string) {
+        const res = await fetch(`${this.baseUrl}/participants-cache/${chatId}`, {
+            method: "GET",
+        });
+
+        if (!res.ok) {
+            return null;
+        }
+
+        const data = (await res.json()) as any;
+
+        return data ? data.cache : null;
+    }
 
     public async cacheUserSocket(userId: ConnectionKey, connection: Connections) {
         const res = await fetch(`${this.baseUrl}/cache-user/${userId}`, {
@@ -83,7 +117,7 @@ export class CacheClient {
         //     );
         // }
         //
-        console.log("done")
+        console.log("done");
 
         const data = (await res.json()) as SessionVerifyResponse;
 
