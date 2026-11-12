@@ -55,17 +55,13 @@ export class Service<
     }
 
     public storeSession(token: SessionKey, session: K) {
-        console.log("15");
         const sessionObj = this.repository.cacheSession(token, session);
 
-        console.log("19");
         return sessionObj;
     }
 
     public verifySession(token: SessionKey): string | null {
         const session = this.repository.getSession(token);
-
-        console.log(`Session: ${session}`);
 
         if (
             (session && session.expiredAt <= new Date(Date.now())) ||

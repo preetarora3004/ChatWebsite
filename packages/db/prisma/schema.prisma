@@ -34,7 +34,7 @@ model User {
 model Session {
     id String @id @default(cuid())
 
-    token String @unique
+    token     String  @unique
     hashToken String  @unique
     isActive  Boolean @default(true)
 
@@ -42,7 +42,7 @@ model Session {
     userId String
 
     createdAt DateTime @default(now())
-    expiredAt DateTime
+    expiredAt DateTime @db.Timestamptz(3)
 }
 
 model Chat {
@@ -70,7 +70,7 @@ model ChatMembers {
     createdAt DateTime @default(now())
     updatedAt DateTime @updatedAt
 
-    @@index([userId, chatId])   
+    @@index([userId, chatId])
 }
 
 model Message {

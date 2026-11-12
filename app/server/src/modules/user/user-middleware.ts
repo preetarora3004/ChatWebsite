@@ -8,7 +8,6 @@ export async function authMiddleware(
     next: NextFunction,
 ) {
     const cookie = req.cookies;
-
     const verified = await authService.verifySession(cookie.sessionToken);
 
     if (!verified) {

@@ -4,12 +4,14 @@ export type ServerSideEvents = {
     "authenticate-request": {
         chatId: string;
         content: string;
+        clientMessageId: string;
     };
 
     "message-service": {
         userId: string;
         chatId: string;
         content: string;
+        clientMessageId: string;
     };
 
     "message-client": {
@@ -17,12 +19,14 @@ export type ServerSideEvents = {
         chatId: string;
         recieverId: { userId: string }[] | null;
         content: string;
+        clientMessageId: string;
     };
 
     message: {
         senderId: string;
         chatId: string;
         content: string;
+        clientMessageId: string;
     };
 
     "presence-service": {

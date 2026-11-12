@@ -47,8 +47,6 @@ export class Controller {
     public getCache(req: Request, res: Response) {
         const userId = req.query.token;
 
-        console.log(userId);
-
         if (typeof userId !== "string" || !userId.trim()) {
             throw new ApiError(
                 "Invalid user ID",
@@ -122,10 +120,7 @@ export class Controller {
     public deleteCache(req: Request, res: Response) { }
 
     public cacheSession(req: Request, res: Response) {
-        console.log("12");
         const { token, hashToken, userId, expiredAt } = req.body;
-
-        console.log(`${token} ${hashToken} ${userId} ${expiredAt}`);
 
         // const parsed = registerSession.safeParse({
         //     token: token,
@@ -133,8 +128,6 @@ export class Controller {
         //     userId: userId,
         //     expiredAt: expiredAt,
         // });
-
-        console.log("13");
 
         // if (!parsed.success) {
         //     throw new ApiError(
@@ -144,16 +137,12 @@ export class Controller {
         //     );
         // }
 
-        console.log("14");
-
         const session = this.service.storeSession(token, {
             userId: userId,
             hashToken: hashToken,
             isActive: true,
             expiredAt: expiredAt,
         });
-
-        console.log("20");
 
         return res.status(SuccessCode.CREATED.statusCode).json({
             success: true,
@@ -164,8 +153,6 @@ export class Controller {
     public verifySession(req: Request, res: Response) {
         const token = req.params.token as SessionKey;
 
-        console.log(`Token : ${token}`);
-
         if (!token) {
             throw new ApiError(
                 "Invalid input",
@@ -175,7 +162,6 @@ export class Controller {
         }
 
         const valid = this.service.verifySession(token);
-        console.log(`Validity : ${valid}`);
 
         return valid
             ? res.status(SuccessCode.ACCEPTED.statusCode).json({

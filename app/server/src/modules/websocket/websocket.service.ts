@@ -19,6 +19,7 @@ export async function handleMessage(message: MessageServer, ws: WebSocket) {
                         userId: message.payload.userId,
                         content: message.payload.content,
                         chatId: message.payload.chatId,
+                        clientMessageId: message.payload.clientMessageId,
                         recieverId: members,
                     } satisfies ServerSideEvents["message-client"],
                 }),

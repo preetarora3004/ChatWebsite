@@ -72,8 +72,6 @@ export class CacheClient {
     }
 
     public async storeSession(session: SessionRegister) {
-        console.log("10");
-        console.log(session);
         const res = await fetch(`${this.baseUrl}/session-user`, {
             method: "POST",
             headers: {
@@ -87,19 +85,15 @@ export class CacheClient {
             }),
         });
 
-        console.log("11");
-
-        if (!res.ok) {
-            throw new ApiError(
-                "Unable to cache",
-                ErrorCode.INTERNAL_SERVER_ERROR.code,
-                ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
-            );
-        }
+        // if (!res.ok) {
+        //     throw new ApiError(
+        //         "Unable to cache",
+        //         ErrorCode.INTERNAL_SERVER_ERROR.code,
+        //         ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
+        //     );
+        // }
 
         const data = (await res.json()) as SessionStoreResponse;
-
-        console.log("12");
 
         return data.body;
     }
@@ -116,12 +110,8 @@ export class CacheClient {
         //         ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
         //     );
         // }
-        //
-        console.log("done");
 
         const data = (await res.json()) as SessionVerifyResponse;
-
-        console.log("passed");
 
         return data.userId;
     }

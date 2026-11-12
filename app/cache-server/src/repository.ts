@@ -50,8 +50,6 @@ export class Repository<
     public cacheSession(token: SessionKey, session: K): CreateSessionResult {
         let sessionObj = this.sessionMap.get(token);
 
-        console.log("16");
-
         if (
             sessionObj &&
             sessionObj.isActive &&
@@ -60,11 +58,7 @@ export class Repository<
             return { ...session, token: token };
         }
 
-        console.log("17");
-
         this.sessionMap.set(token, session);
-
-        console.log("18");
 
         return { ...session, token: token };
     }

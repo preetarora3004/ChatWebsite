@@ -22,8 +22,6 @@ server.on("upgrade", async (req, socket, head) => {
         if (!serverId) {
             const sessionToken = getCookie(req.headers.cookie, "sessionToken");
 
-            console.log(sessionToken)
-
             if (!sessionToken) {
                 socket.write("HTTP/1.1 401 Unauthorized\r\n\r\n");
                 socket.destroy();

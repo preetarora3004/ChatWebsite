@@ -56,6 +56,7 @@ export function sendMessage(
     chatId: string,
     senderId: string,
     content: string,
+    clientMessageId: string,
     members: { userId: string }[],
 ) {
     members.forEach((idx) => {
@@ -70,6 +71,7 @@ export function sendMessage(
                             chatId: chatId,
                             senderId: senderId,
                             content: content,
+                            clientMessageId: clientMessageId
                         } satisfies ServerSideEvents["message"],
                     }),
                 );
@@ -133,6 +135,7 @@ export async function handleMessage<K extends MessageServer>(
                         userId: ws.id,
                         content: data.payload.content,
                         chatId: data.payload.chatId,
+                        clientMessageId: data.payload.clientMessageId
                     } satisfies ServerSideEvents["message-service"],
                 }),
             );
@@ -146,7 +149,8 @@ export async function handleMessage<K extends MessageServer>(
                 data.payload.chatId,
                 data.payload.userId,
                 data.payload.content,
-                data.payload.recieverId,
+                data.payload.clientMessageId,
+                data.payload.recieverId
             );
             return;
 

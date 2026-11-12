@@ -24,7 +24,6 @@ export class AuthService {
     private async createSession(
         userId: SessionUserId,
     ): Promise<CreateSessionResult | undefined> {
-        console.log("7");
 
         const activeSession = await this.repository.getActiveSession(userId);
 
@@ -43,10 +42,6 @@ export class AuthService {
             expiredAt,
         );
 
-        console.log(activeSession);
-
-        console.log("9");
-
         const cacheSession = await this.cacheClient.storeSession({
             userId: userId,
             token: sessionResult!.token,
@@ -54,26 +49,21 @@ export class AuthService {
             expiredAt: sessionResult!.expiredAt,
         });
 
-        console.log("13");
-
         return !sessionResult ? undefined : cacheSession;
     }
 
     public async verifySession(token: string): Promise<string | null> {
-        const hashToken = tokenHash(token) satisfies HashToken;
 
-        console.log("hashed");
-        console.log(hashToken);
+        const hashToken = tokenHash(token) satisfies HashToken;
 
         const valid = await this.cacheClient.verifySession(token);
 
-        console.log(valid);
 
         if (valid) {
             return valid;
         }
 
-        const session = await this.repository.getSessionByHash(token);
+        const session = await this.repository.getSessionByHash(hashToken);
 
         if (
             !session ||
@@ -85,7 +75,6 @@ export class AuthService {
 
         const cache = await this.cacheClient.storeSession(session); //include token
 
-        console.log(session);
 
         return !session ||
             session.expiredAt <= new Date(Date.now()) ||
@@ -125,7 +114,6 @@ export class AuthService {
     }
 
     public async login(data: LoginInput) {
-        console.log("2");
 
         const parsed = loginSchema.safeParse(data);
 
@@ -137,8 +125,6 @@ export class AuthService {
             );
         }
 
-        console.log("3");
-
         const user = await this.repository.login(data.username);
 
         if (!user || !user.id) {
@@ -149,17 +135,8 @@ export class AuthService {
             );
         }
 
-        console.log("5");
 
         const hashedPassword = await bcrypt.compare(data.password, user.password);
-
-        console.log({
-            hashedPassword,
-            storedHashLength: user.password.length,
-            storedHashPrefix: user.password.slice(0, 7),
-        });
-
-        console.log("6");
 
         if (!hashedPassword) {
             throw new ApiError(
@@ -170,8 +147,6 @@ export class AuthService {
         }
 
         const session = await this.createSession(user.id);
-
-        console.log("14");
 
         return session;
     }

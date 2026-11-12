@@ -17,8 +17,6 @@ export class AuthRepository {
         tokenHash: HashToken,
         expiresAt: ExpiredAt,
     ): Promise<CreateSessionResult | undefined> {
-        console.log(userId);
-        console.log("7");
         return this.prisma.session.create({
             data: {
                 token: token,
@@ -39,18 +37,13 @@ export class AuthRepository {
     public async getSessionByHash(
         hashToken: HashToken,
     ): Promise<CreateSessionResult | null> {
-        console.log("database");
         return this.prisma.session.findFirst({
             where: {
-                AND: [
-                    {
-                        hashToken: hashToken,
-                        isActive: true,
-                        expiredAt: {
-                            gte: new Date(Date.now()),
-                        },
-                    },
-                ],
+                hashToken: hashToken,
+                isActive: true,
+                expiredAt: {
+                    gte: new Date(),
+                },
             },
             select: {
                 token: true,
@@ -99,7 +92,6 @@ export class AuthRepository {
     }
 
     public async login(username: string) {
-        console.log("4");
         return this.prisma.user.findUnique({
             where: {
                 username: username,
