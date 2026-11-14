@@ -1,4 +1,8 @@
-import { useEffect, useRef, useState } from "react";
+import {
+    useEffect,
+    useRef,
+    useState,
+} from "react";
 
 import {
     Navigate,
@@ -34,7 +38,9 @@ export default function ChatConversation() {
         status,
         messages,
         chats,
+        presence,
         sendMessage,
+        requestPresence,
     } = useOutletContext<ChatContext>();
 
     const [input, setInput] = useState("");
@@ -47,6 +53,29 @@ export default function ChatConversation() {
         ? messages[chatId] ?? []
         : [];
 
+    const activeUsers = presence[chatId ?? ""] ?? [];
+
+    const otherParticipants = chat?.members.filter(
+        (member) => member.userId !== userId,
+    ) ?? [];
+
+    const onlineParticipants = otherParticipants.filter(
+        (member) => activeUsers.includes(member.userId),
+    );
+
+    const isAnyoneOnline = onlineParticipants.length > 0;
+
+    useEffect(() => {
+        console.log("Requesting")
+        if (!chatId || status !== "connected") {
+            return;
+        }
+
+        console.log("result arrived")
+
+        requestPresence(chatId);
+    }, [chatId, status, requestPresence]);
+
     useEffect(() => {
         bottomRef.current?.scrollIntoView({
             behavior: "smooth",
@@ -54,9 +83,7 @@ export default function ChatConversation() {
         });
     }, [chatId, chatMessages.length]);
 
-    function handleSubmit(
-        event: FormEvent<HTMLFormElement>,
-    ) {
+    function handleSubmit(event: FormEvent<HTMLFormElement>) {
         event.preventDefault();
 
         if (!chatId || !input.trim()) return;
@@ -78,23 +105,33 @@ export default function ChatConversation() {
         );
     }
 
-
     return (
         <div className="flex h-full min-h-0 flex-col">
-            {/* Header */}
-
             <header className="flex h-[76px] shrink-0 items-center justify-between border-b border-white/[0.07] px-7">
                 <div>
                     <h2 className="text-sm font-semibold text-neutral-100">
                         {chat.name}
                     </h2>
 
-                    <p className="mt-1 text-xs text-neutral-600">
-                        {status}
-                    </p>
+                    <div className="mt-2 flex items-center gap-2">
+                        <span
+                            className={`h-2 w-2 rounded-full ${
+                                isAnyoneOnline
+                                    ? "bg-green-500"
+                                    : "bg-neutral-600"
+                            }`}
+                        />
+
+                        <p className="text-xs text-neutral-500">
+                            {isAnyoneOnline
+                                ? onlineParticipants.length === 1
+                                    ? "Online"
+                                    : `${onlineParticipants.length} participants online`
+                                : "Offline"}
+                        </p>
+                    </div>
                 </div>
             </header>
-
 
             <div className="flex-1 overflow-y-auto px-6 py-6">
                 {chatMessages.length === 0 ? (
@@ -112,8 +149,7 @@ export default function ChatConversation() {
                 ) : (
                     <div className="mx-auto flex max-w-4xl flex-col gap-4">
                         {chatMessages.map((message) => {
-                            const isOwn =
-                                message.senderId === userId;
+                            const isOwn = message.senderId === userId;
 
                             return (
                                 <div
@@ -157,8 +193,7 @@ export default function ChatConversation() {
                                             )}
 
                                             {isOwn &&
-                                                message.status ===
-                                                    "sending" && (
+                                                message.status === "sending" && (
                                                     <span>
                                                         Sending...
                                                     </span>

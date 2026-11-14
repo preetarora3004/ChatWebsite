@@ -8,6 +8,16 @@ export type ChatUser = {
     username: string;
 };
 
+export type ChatSummary = {
+    id: string;
+    name: string;
+    lastMessage: string;
+    members: {
+        userId: string;
+        username: string;
+    }[];
+};
+
 export type ChatMember = {
     id: string;
     user: ChatUser;
@@ -18,6 +28,7 @@ export type ChatMessage = {
     chatId: string;
     content: string;
     senderId: string;
+    createdAt: number;
 };
 
 export type Chat = {
@@ -50,16 +61,10 @@ export type DisplayMessage = {
     status?: "sending" | "sent";
 };
 
-export type ChatSummary = {
-    id: string;
-    name: string;
-    lastMessage: string;
-};
-
 export type IncomingMessage = {
     event: "message";
     payload: {
-        id: string;
+        id?: string;
         clientMessageId?: string;
         senderId: string;
         chatId: string;
@@ -68,11 +73,32 @@ export type IncomingMessage = {
     };
 };
 
+export type IncomingPresence = {
+    event: "presence";
+    payload: {
+        chatId: string;
+        activeUsers: {
+            participantId: string;
+        }[];
+    };
+};
+
+export type PresenceState = Record<string, string[]>;
+
 export type ChatContext = {
     userId: string;
     username: string;
     status: ConnectionStatus;
     messages: Record<string, DisplayMessage[]>;
     chats: ChatSummary[];
-    sendMessage: (chatId: string, content: string) => boolean;
+    presence: PresenceState;
+
+    sendMessage: (
+        chatId: string,
+        content: string,
+    ) => boolean;
+
+    requestPresence: (
+        chatId: string,
+    ) => boolean;
 };

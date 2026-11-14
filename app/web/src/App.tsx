@@ -15,13 +15,11 @@ export default function App() {
                 <Route path="/login" element={<Login />} />
 
                 <Route path="/chat" element={<ChatLayout />}>
-                    {/* Redirect to the first available conversation */}
                     <Route
                         index
                         element={<ChatIndexRedirect />}
                     />
 
-                    {/* Dynamic conversation route */}
                     <Route
                         path=":chatId"
                         element={<ChatConversation />}

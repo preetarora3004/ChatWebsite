@@ -21,7 +21,7 @@ export class UserRepository {
                             select: {
                                 id: true,
                                 messages: {
-                                    take: 1,
+                                    take: 10,
                                     orderBy: {
                                         createdAt: "desc",
                                     },
@@ -30,6 +30,7 @@ export class UserRepository {
                                         senderId: true,
                                         chatId: true,
                                         content: true,
+                                        createdAt: true
                                     },
                                 },
                                 chatMembers: {

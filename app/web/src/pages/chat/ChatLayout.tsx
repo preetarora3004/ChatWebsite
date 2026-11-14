@@ -1,4 +1,6 @@
-import { useEffect, useRef, useState } from "react";
+import { useCallback, useEffect, useRef, useState } from "react";
+
+import type { ServerSideEvents } from "@workspace/contracts";
 
 import { Link, Outlet, useLocation, useNavigate } from "react-router-dom";
 
@@ -12,6 +14,8 @@ import type {
     DashboardApiResponse,
     DisplayMessage,
     IncomingMessage,
+    IncomingPresence,
+    PresenceState,
 } from "./chat.types";
 
 import { getChatSummaries, getInitialMessages } from "./chat.utils";
@@ -45,6 +49,36 @@ function isIncomingMessage(data: unknown): data is IncomingMessage {
     );
 }
 
+function isIncomingPresence(data: unknown): data is IncomingPresence {
+    if (typeof data !== "object" || data === null) {
+        return false;
+    }
+
+    const candidate = data as Record<string, unknown>;
+    const payload = candidate.payload;
+
+    if (
+        candidate.event !== "presence" ||
+        typeof payload !== "object" ||
+        payload === null
+    ) {
+        return false;
+    }
+
+    const presence = payload as Record<string, unknown>;
+
+    return (
+        typeof presence.chatId === "string" &&
+        Array.isArray(presence.activeUsers) &&
+        presence.activeUsers.every(
+            (user) =>
+                typeof user === "object" &&
+                user !== null &&
+                typeof (user as Record<string, unknown>).participantId === "string",
+        )
+    );
+}
+
 export default function ChatLayout() {
     const navigate = useNavigate();
     const location = useLocation();
@@ -57,9 +91,12 @@ export default function ChatLayout() {
         {},
     );
 
+    const [presence, setPresence] = useState<PresenceState>({});
+
     const [status, setStatus] = useState<ConnectionStatus>("connecting");
 
     const [loading, setLoading] = useState(true);
+
     const [dashboardError, setDashboardError] = useState<string | null>(null);
 
     const [search, setSearch] = useState("");
@@ -100,6 +137,7 @@ export default function ChatLayout() {
                 if (!active) return;
 
                 console.error("Dashboard fetch failed:", error);
+
                 setDashboardError("Unable to load your conversations.");
             } finally {
                 if (active) {
@@ -117,7 +155,10 @@ export default function ChatLayout() {
 
     useEffect(() => {
         if (!username) {
-            navigate("/login", { replace: true });
+            navigate("/login", {
+                replace: true,
+            });
+
             return;
         }
 
@@ -141,29 +182,53 @@ export default function ChatLayout() {
             if (event.data === "ping") return;
 
             try {
-                const incoming: unknown = JSON.parse(event.data);
+                const incoming: ServerSideEvents["presence"] = JSON.parse(event.data);
+
+                if (isIncomingPresence(incoming)) {
+                    const { chatId, activeUsers } = incoming.payload;
+
+                    setPresence((previous) => ({
+                        ...previous,
+                        [chatId]: activeUsers.map((user) => user.participantId),
+                    }));
+
+                    return;
+                }
 
                 if (!isIncomingMessage(incoming)) {
                     console.warn("Unknown WebSocket message:", incoming);
+
                     return;
                 }
 
                 const payload = incoming.payload;
 
                 const receivedMessage: DisplayMessage = {
-                    id: payload.id ?? crypto.randomUUID(),
+                    id: payload.id ?? payload.clientMessageId ?? crypto.randomUUID(),
+
+                    clientMessageId: payload.clientMessageId,
+
                     senderId: payload.senderId,
+
                     chatId: payload.chatId,
+
                     content: payload.content,
+
                     timestamp: payload.timestamp ?? new Date().toISOString(),
+
                     isOwn: payload.senderId === dashboard.id,
+
+                    status: "sent",
                 };
 
                 setMessages((previous) => {
                     const existingMessages = previous[payload.chatId] ?? [];
 
                     const alreadyExists = existingMessages.some(
-                        (message) => message.id === receivedMessage.id,
+                        (message) =>
+                            message.id === receivedMessage.id ||
+                            (receivedMessage.clientMessageId &&
+                                message.clientMessageId === receivedMessage.clientMessageId),
                     );
 
                     if (alreadyExists) {
@@ -188,6 +253,8 @@ export default function ChatLayout() {
             if (!active) return;
 
             setStatus("disconnected");
+
+            setPresence({});
         };
 
         return () => {
@@ -201,62 +268,98 @@ export default function ChatLayout() {
         };
     }, [username, navigate, loading, dashboard]);
 
-    function sendMessage(chatId: string, content: string): boolean {
-        const socket = socketRef.current;
-        const trimmedContent = content.trim();
 
-        if (
-            !trimmedContent ||
-            socket?.readyState !== WebSocket.OPEN ||
-            !dashboard
-        ) {
+    const sendMessage = useCallback(
+        (chatId: string, content: string): boolean => {
+            const socket = socketRef.current;
+
+            const trimmedContent = content.trim();
+
+            if (
+                !trimmedContent ||
+                socket?.readyState !== WebSocket.OPEN ||
+                !dashboard
+            ) {
+                return false;
+            }
+
+            const clientMessageId = crypto.randomUUID();
+
+            const timestamp = new Date().toISOString();
+
+            const payload = {
+                clientMessageId,
+                chatId,
+                content: trimmedContent,
+            };
+
+            try {
+                socket.send(
+                    JSON.stringify({
+                        event: "authenticate-request",
+                        payload,
+                    }),
+                );
+
+                const optimisticMessage: DisplayMessage = {
+                    id: clientMessageId,
+                    clientMessageId,
+                    senderId: dashboard.id,
+                    chatId,
+                    content: trimmedContent,
+                    timestamp,
+                    isOwn: true,
+                    status: "sending",
+                };
+
+                setMessages((previous) => ({
+                    ...previous,
+                    [chatId]: [...(previous[chatId] ?? []), optimisticMessage],
+                }));
+
+                return true;
+            } catch (error) {
+                console.error("Message sending failed:", error);
+
+                return false;
+            }
+        },
+        [dashboard],
+    );
+
+    const requestPresence = useCallback((chatId: string): boolean => {
+        const socket = socketRef.current;
+
+        if (socket?.readyState !== WebSocket.OPEN) {
             return false;
         }
-
-        const clientMessageId = crypto.randomUUID();
-        const timestamp = new Date().toISOString();
-
-        const payload = {
-            clientMessageId,
-            chatId,
-            content: trimmedContent,
-        };
 
         try {
             socket.send(
                 JSON.stringify({
-                    event: "authenticate-request",
-                    payload,
+                    event: "presence-service",
+                    payload: {
+                        chatId,
+                    },
                 }),
             );
 
-            const optimisticMessage: DisplayMessage = {
-                id: clientMessageId,
-                senderId: dashboard.id,
-                chatId,
-                content: trimmedContent,
-                timestamp,
-                isOwn: true,
-            };
-
-            setMessages((previous) => ({
-                ...previous,
-                [chatId]: [...(previous[chatId] ?? []), optimisticMessage],
-            }));
-
             return true;
         } catch (error) {
-            console.error("Message sending failed:", error);
+            console.error("Presence request failed:", error);
+
             return false;
         }
-    }
+    }, []);
 
     function handleLogout() {
         sessionStorage.removeItem("username");
 
         socketRef.current?.close(1000, "User logged out");
 
-        navigate("/login", { replace: true });
+        navigate("/login", {
+            replace: true,
+        });
     }
 
     const chats: ChatSummary[] = dashboard
@@ -305,16 +408,16 @@ export default function ChatLayout() {
         status,
         messages,
         chats,
+        presence,
         sendMessage,
+        requestPresence,
     };
 
     return (
         <main className="h-screen w-full overflow-hidden bg-[#090909] p-3 text-white">
             <div className="mx-auto flex h-full max-w-[1600px] overflow-hidden rounded-2xl border border-white/[0.08] bg-[#101010]">
-                {/* LEFT SIDEBAR */}
 
                 <aside className="flex w-[340px] shrink-0 flex-col border-r border-white/[0.07]">
-                    {/* Header */}
 
                     <div className="flex items-center justify-between px-6 py-5">
                         <div className="flex items-center gap-3">
@@ -391,6 +494,7 @@ export default function ChatLayout() {
                             )}
                         </div>
                     </div>
+
 
                     <div className="border-t border-white/[0.07] p-4">
                         <div className="flex items-center justify-between">

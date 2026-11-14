@@ -32,6 +32,8 @@ export class CacheClient {
 
         const data = (await res.json()) as ParticipantCacheResponse;
 
+        console.log(data.success)
+
         return data.success ? true : false;
     }
 

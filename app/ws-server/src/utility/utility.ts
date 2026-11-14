@@ -93,6 +93,7 @@ export function notifyPresence(chatId: string, participants: ParticipantCache) {
         let user = userMap.get(idx.userId);
 
         if (user && user.isOnline) {
+            console.log(idx.username)
             activeUsers.push({ participantId: idx.userId });
         }
     });
@@ -122,7 +123,7 @@ export async function handleMessage<K extends MessageServer>(
 ) {
     switch (data.event) {
         case "authenticate-request":
-            let serverSocket = getServerSocket();
+            var serverSocket = getServerSocket();
 
             if (!serverSocket) {
                 return false;
@@ -159,6 +160,7 @@ export async function handleMessage<K extends MessageServer>(
                 return;
             }
 
+
             serverSocket = getServerSocket();
 
             if (!serverSocket) {
@@ -167,7 +169,7 @@ export async function handleMessage<K extends MessageServer>(
 
             serverSocket.send(
                 JSON.stringify({
-                    event: "message-service",
+                    event: "presence-service",
                     payload: {
                         chatId: data.payload.chatId,
                     },
@@ -177,9 +179,13 @@ export async function handleMessage<K extends MessageServer>(
             return true;
 
         case "presence-client":
+            console.log("Reached point")
+            console.log(data)
             if (!data.payload.chatId || !data.payload.chatMembers) {
                 return;
             }
+
+            console.log("Notify")
 
             return notifyPresence(data.payload.chatId, data.payload.chatMembers);
     }

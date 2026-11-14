@@ -28,6 +28,8 @@ export class Controller {
     public getParticipants(req: Request, res: Response) {
         const chatId = req.params.chatId as PartitipantKey;
 
+        console.log("getting participants")
+
         if (!chatId) {
             throw new ApiError(
                 "Invalid input",

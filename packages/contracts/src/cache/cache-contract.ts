@@ -36,7 +36,7 @@ export type ChatParticipants = {
 
 export type ParticipantCache = {
     participants: { userId: string; username: string }[];
-    lastFetch: Date;
+    lastFetch?: Date;
 };
 
 export type ParticipantChatId = {

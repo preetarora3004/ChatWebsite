@@ -1,12 +1,6 @@
-import type {
-    Dashboard,
-    ChatSummary,
-    DisplayMessage,
-} from "./chat.types";
+import type { Dashboard, ChatSummary, DisplayMessage } from "./chat.types";
 
-export function getChatSummaries(
-    dashboard: Dashboard,
-): ChatSummary[] {
+export function getChatSummaries(dashboard: Dashboard): ChatSummary[] {
     return dashboard.chatMembers.map(({ chat }) => {
         const otherMembers = chat.chatMembers.filter(
             (member) => member.user.id !== dashboard.id,
@@ -14,9 +8,7 @@ export function getChatSummaries(
 
         const name =
             otherMembers.length > 0
-                ? otherMembers
-                    .map((member) => member.user.username)
-                    .join(", ")
+                ? otherMembers.map((member) => member.user.username).join(", ")
                 : "You";
 
         const lastMessage = chat.messages.at(-1);
@@ -25,10 +17,14 @@ export function getChatSummaries(
             id: chat.id,
             name,
             lastMessage: lastMessage?.content ?? "No messages yet",
+
+            members: chat.chatMembers.map((member) => ({
+                userId: member.user.id,
+                username: member.user.username,
+            })),
         };
     });
 }
-
 export function getInitialMessages(
     dashboard: Dashboard,
 ): Record<string, DisplayMessage[]> {
@@ -40,7 +36,7 @@ export function getInitialMessages(
                 senderId: message.senderId,
                 chatId: message.chatId,
                 content: message.content,
-                timestamp: "",
+                timestamp: new Date(message.createdAt).toISOString(),
                 isOwn: message.senderId === dashboard.id,
                 status: "sent" as const,
             })),

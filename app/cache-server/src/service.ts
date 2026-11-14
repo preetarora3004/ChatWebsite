@@ -35,9 +35,13 @@ export class Service<
     public getParticipants(chatId: string) {
         const cache = this.repository.getChatParticipant(chatId);
 
+        console.log("retrieved")
+
         if (!cache) {
             return null;
         }
+
+        console.log("returning")
 
         return cache;
     }
