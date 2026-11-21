@@ -50,8 +50,8 @@ export class Service<
         return this.repository.storeCache(userId, connection);
     }
 
-    public retrieveCache(userId: ConnectionKey): T | null {
-        return this.repository.retrieveCache(userId);
+    public retrieveCache(token: ConnectionKey): T | null {
+        return this.repository.retrieveCache(token);
     }
 
     public deleteCache(userId: ConnectionKey): boolean {

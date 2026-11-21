@@ -20,7 +20,7 @@ export default function Login() {
         setError(null);
 
         try {
-            const response = await fetch(`${API_URL}/api/v1/auth/login`, {
+            const response = await fetch(`${API_URL}/api/v1/user/login`, {
                 method: "POST",
                 credentials: "include",
                 headers: {

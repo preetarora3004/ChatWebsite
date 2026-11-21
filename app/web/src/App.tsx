@@ -1,20 +1,33 @@
-import { BrowserRouter, Navigate, Route, Routes } from "react-router-dom";
+import {
+    BrowserRouter,
+    Navigate,
+    Route,
+    Routes,
+} from "react-router-dom";
 
 import Login from "./pages/Login";
-import "./App.css";
 
-import ChatLayout from "./pages/chat/ChatLayout";
-import ChatConversation, {
-    ChatIndexRedirect,
-} from "./pages/chat/ChatConversation";
+import ChatLayout from "./features/chat/pages/chatLayout";
+
+import ChatConversation from "./features/chat/pages/chatConversation";
+
+import ChatIndexRedirect from "./features/chat/pages/chatIndexRedirect";
+
+import "./App.css";
 
 export default function App() {
     return (
         <BrowserRouter>
             <Routes>
-                <Route path="/login" element={<Login />} />
+                <Route
+                    path="/login"
+                    element={<Login />}
+                />
 
-                <Route path="/chat" element={<ChatLayout />}>
+                <Route
+                    path="/chat"
+                    element={<ChatLayout />}
+                >
                     <Route
                         index
                         element={<ChatIndexRedirect />}
@@ -28,7 +41,12 @@ export default function App() {
 
                 <Route
                     path="*"
-                    element={<Navigate to="/login" replace />}
+                    element={
+                        <Navigate
+                            to="/login"
+                            replace
+                        />
+                    }
                 />
             </Routes>
         </BrowserRouter>

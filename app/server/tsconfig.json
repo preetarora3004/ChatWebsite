@@ -9,6 +9,9 @@
         "moduleDetection": "force",
         "allowJs": true,
         "paths": {
+            "@workspace/server/*": [
+                "./src/modules/*"
+            ],
             "@workspace/db/*": [
                 "../packages/db/*",
                 "../packages/db/lib/*"
@@ -42,7 +45,7 @@
         "noUnusedParameters": false,
         "noPropertyAccessFromIndexSignature": false,
         "typeRoots": [
-            "./src/modules/types/*",
+            "./src/shared/types/*",
             "./node_modules/@types/*"
         ]
     }

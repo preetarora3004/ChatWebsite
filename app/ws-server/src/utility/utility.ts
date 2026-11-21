@@ -157,9 +157,9 @@ export async function handleMessage<K extends MessageServer>(
 
         case "presence-service":
             if (!data.payload.chatId) {
+                console.log("empty")
                 return;
             }
-
 
             serverSocket = getServerSocket();
 

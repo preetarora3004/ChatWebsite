@@ -32,7 +32,7 @@ export class CacheClient {
 
         const data = (await res.json()) as ParticipantCacheResponse;
 
-        console.log(data.success)
+        console.log(data.success);
 
         return data.success ? true : false;
     }
@@ -87,15 +87,16 @@ export class CacheClient {
             }),
         });
 
-        // if (!res.ok) {
-        //     throw new ApiError(
-        //         "Unable to cache",
-        //         ErrorCode.INTERNAL_SERVER_ERROR.code,
-        //         ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
-        //     );
-        // }
+        if (!res.ok) {
+            throw new ApiError(
+                "Unable to cache",
+                ErrorCode.INTERNAL_SERVER_ERROR.code,
+                ErrorCode.INTERNAL_SERVER_ERROR.statusCode,
+            );
+        }
 
         const data = (await res.json()) as SessionStoreResponse;
+        console.log("sending back")
 
         return data.body;
     }
