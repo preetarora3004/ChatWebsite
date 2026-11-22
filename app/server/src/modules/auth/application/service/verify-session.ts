@@ -1,10 +1,11 @@
 import { ApiError, ErrorCode } from "@workspace/http";
-import type { SessionVerifyRepository } from "../../infrastructure/repository/session-verify.repository";
 import { Security } from "../../domain/entities/security";
+import type { SessionVerifyPort } from "../interface/inbound/session-verify.port";
+import type { ISessionVerifyRepository } from "../interface/outbound/session-verify.repository";
 
-export class VerifySession {
+export class VerifySession implements SessionVerifyPort {
     constructor(
-        private readonly verifySessionRepository: SessionVerifyRepository,
+        private readonly verifySessionRepository: ISessionVerifyRepository,
     ) { }
 
     async verify(token: string) {

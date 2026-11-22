@@ -1,9 +1,9 @@
 import { SuccessCode } from "@workspace/http";
-import type { RegisterAccountService } from "../../application/service/register-service";
 import type { Request, Response } from "express";
+import type { RegisterAccountServicePort } from "../../application/interface/inbound/register-service.port";
 
 export class UserRegisterController {
-    constructor(private readonly registerUserService: RegisterAccountService) { }
+    constructor(private readonly registerUserService: RegisterAccountServicePort) { }
 
     public async createAccount(req: Request, res: Response) {
         const { username, email, password } = req.body;

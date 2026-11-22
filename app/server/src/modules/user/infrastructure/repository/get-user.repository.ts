@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@workspace/db/client";
-import type { IGetUserRepository } from "../../application/interface/get-user-repository";
+import type { IGetUserRepository } from "../../application/interface/outbound/get-user-repository";
 import { User } from "../../domain/entities/user";
 import { ApiError, ErrorCode } from "@workspace/http";
 

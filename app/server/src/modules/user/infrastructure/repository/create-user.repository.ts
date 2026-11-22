@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@workspace/db/client";
-import type { IUserRegisterRepository } from "../../application/interface/create-user-repository";
+import type { IUserRegisterRepository } from "../../application/interface/outbound/create-user-repository";
 import { User } from "../../domain/entities/user";
 import { UserCreation } from "../../domain/entities/userCreation";
 

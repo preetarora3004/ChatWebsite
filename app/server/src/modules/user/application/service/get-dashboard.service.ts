@@ -1,9 +1,8 @@
-import type { GetDashboardRepository } from "../../infrastructure/repository/get-dashboard.repository";
+import type { GetDashboardServicePort } from "../interface/inbound/dashboard-service.port";
+import type { IGetDashboard } from "../interface/outbound/get-dashboard.repository";
 
-export class GetDashboardService {
-    constructor(
-        private readonly getDashboardRepository: GetDashboardRepository,
-    ) { }
+export class GetDashboardService implements GetDashboardServicePort {
+    constructor(private readonly getDashboardRepository: IGetDashboard) { }
 
     public async getDashboard(userId: string) {
         const dashboard = await this.getDashboardRepository.getDashboard(userId);

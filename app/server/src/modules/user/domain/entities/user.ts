@@ -4,6 +4,11 @@ interface UserProps {
     password: string
 }
 
+export interface UserDTO {
+    userId: string
+    username: string
+}
+
 export class User {
     constructor(private readonly props: UserProps) { }
 

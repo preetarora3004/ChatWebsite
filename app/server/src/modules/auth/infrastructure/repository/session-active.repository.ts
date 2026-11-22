@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@workspace/db/client";
-import type { ISessionActiveRepository } from "../../application/interface/session-active";
+import type { ISessionActiveRepository } from "../../application/interface/outbound/session-active";
 import { Session } from "../../domain/entities/session";
 
 export class SessionActiveRepository implements ISessionActiveRepository {

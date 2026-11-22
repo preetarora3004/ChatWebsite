@@ -1,11 +1,12 @@
 import { Security } from "../../domain/entities/security";
-import type { SessionActiveRepository } from "../../infrastructure/repository/session-active.repository";
-import type { SessionCreationRepository } from "../../infrastructure/repository/session-creation.repository";
+import type { SessionCreationPort } from "../interface/inbound/session-creation.port";
+import type { ISessionActiveRepository } from "../interface/outbound/session-active";
+import type { ISessionCreation } from "../interface/outbound/session-creation";
 
-export class SessionCreation {
+export class SessionCreation implements SessionCreationPort {
     constructor(
-        private readonly sessionActiveRepository: SessionActiveRepository,
-        private readonly sessionCreationRepository: SessionCreationRepository,
+        private readonly sessionActiveRepository: ISessionActiveRepository,
+        private readonly sessionCreationRepository: ISessionCreation,
     ) { }
 
     async createSession(userId: string) {

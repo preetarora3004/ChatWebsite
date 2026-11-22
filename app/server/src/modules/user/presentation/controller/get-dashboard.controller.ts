@@ -1,9 +1,9 @@
 import { ApiError, ErrorCode } from "@workspace/http";
-import { GetDashboardService } from "../../application/service/get-dashboard.service";
 import type { Request, Response } from "express";
+import type { GetDashboardServicePort } from "../../application/interface/inbound/dashboard-service.port";
 
 export class GetDashboardController {
-    constructor(private readonly getDashboard: GetDashboardService) { }
+    constructor(private readonly getDashboard: GetDashboardServicePort) { }
 
     public async dashBoard(req: Request, res: Response) {
         const userId = req.userId;

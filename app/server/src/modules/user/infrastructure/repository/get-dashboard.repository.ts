@@ -1,7 +1,8 @@
 import type { PrismaClient } from "@workspace/db/client";
 import { ApiError, ErrorCode } from "@workspace/http";
+import type { IGetDashboard } from "../../application/interface/outbound/get-dashboard.repository";
 
-export class GetDashboardRepository {
+export class GetDashboardRepository implements IGetDashboard {
     constructor(private readonly prisma: PrismaClient) { }
 
     public async getDashboard(userId: string) {

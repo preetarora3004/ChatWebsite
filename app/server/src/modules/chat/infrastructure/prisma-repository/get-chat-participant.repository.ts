@@ -1,14 +1,12 @@
 import type { PrismaClient } from "@workspace/db/client";
+import type { GetChatParticipantRepositoryPort } from "../../application/interface/outbound/get-chat-participant.repository.port";
+import { ChatParticipant } from "../../domain/entities/chatParticipant";
 
-export class ChatRepository {
-    private readonly client: PrismaClient;
-
-    constructor(prisma: PrismaClient) {
-        this.client = prisma;
-    }
+export class GetChatParticipantRepository implements GetChatParticipantRepositoryPort {
+    constructor(private readonly client: PrismaClient) { }
 
     public async getChatParticipant(chatId: string) {
-        return this.client.chat.findUnique({
+        const chatParticipants = await this.client.chat.findUnique({
             where: {
                 id: chatId,
             },
@@ -25,5 +23,7 @@ export class ChatRepository {
                 },
             },
         });
+
+        return chatParticipants ? new ChatParticipant(chatParticipants) : null;
     }
 }

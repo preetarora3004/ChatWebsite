@@ -1,9 +1,9 @@
 import { SuccessCode } from "@workspace/http";
 import type { Response, Request } from "express";
-import type { LoginService } from "../../application/service/login-service";
+import type { LoginServicePort } from "../../application/interface/inbound/login-service-service.port";
 
 export class UserLoginController {
-    constructor(private readonly loginService: LoginService) { }
+    constructor(private readonly loginService: LoginServicePort) { }
 
     public async login(req: Request, res: Response) {
         const { username, password } = req.body;

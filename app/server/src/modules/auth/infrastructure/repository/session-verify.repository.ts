@@ -1,5 +1,5 @@
 import type { PrismaClient } from "@workspace/db/client";
-import type { ISessionVerifyRepository } from "../../application/interface/session-verify.repository";
+import type { ISessionVerifyRepository } from "../../application/interface/outbound/session-verify.repository";
 import { Session } from "../../domain/entities/session";
 import { ApiError, ErrorCode } from "@workspace/http";
 
